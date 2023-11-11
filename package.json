@@ -1,0 +1,14 @@
+{
+  "name": "medici",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "@kmamal/gl": "^6.0.2-1",
+    "@kmamal/sdl": "^0.9.0",
+    "canvas": "^2.11.2",
+    "node-html-parser": "^6.1.11"
+  }
+}
