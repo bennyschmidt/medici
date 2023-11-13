@@ -28,9 +28,7 @@ class Medici extends Vasari {
   constructor () {
     super(
       `${__dirname}/renderers/Medici/home.jsx`,
-      {
-        title: 'Medici'
-      }
+      'Medici'
     );
   }
 
@@ -42,8 +40,6 @@ class Medici extends Vasari {
     const rootElement = this.state.elements.find(({ id, rawTagName }) => (
       id === 'root' || rawTagName === 'Medici'
     ));
-
-    console.log(this.state.elements);
 
     const [
       namespace,
@@ -133,7 +129,7 @@ class Medici extends Vasari {
       case 'IMAGE':
         this.value = `
           <Medici>
-            <Image path="${file}" x={0} y={74} width={1024} height={515} />
+            <Image cover path="${file}" x={0} y={64} width={1024} height={515} />
             <Text stroke style="#666" text="Search apps & content..." x={20} y={33} maxWidth={984} />
             <Rect stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" x={5} y={5} width={1014} height={50} />
           </Medici>
@@ -166,9 +162,13 @@ class Medici extends Vasari {
         break;
 
       case 'PAGE':
-        const eventTags = rootElement.getElementsByTagName('Event');
+        const unsupportedTags = [
+          ...rootElement.getElementsByTagName('Declare'),
 
-        for (const tag of eventTags) {
+          ...rootElement.getElementsByTagName('Event')
+        ];
+
+        for (const tag of unsupportedTags) {
           tag.remove();
         }
 

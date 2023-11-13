@@ -21,7 +21,7 @@ import {
   Image
 } from '../../components/index.js';
 
-const FPS = 30;
+const FPS = 1;
 
 const WINDOW_OPTIONS = {
   title: "Window",
@@ -71,6 +71,7 @@ class Vasari extends App {
 
     this.events = {};
     this.listeners = {};
+    this.docState = {};
 
     // Callback
 
@@ -511,13 +512,13 @@ class Vasari extends App {
           () => {
             const canvasImage = new Canvas.Image();
 
-            const isContain = !!attributes.cover;
+            const isCover = !!attributes.cover;
 
             canvasImage.onload = () => {
               const {
                 width: imageWidth,
                 height: imageHeight
-              } = Image[isContain ? 'contain' : 'cover'](
+              } = Image[isCover ? 'cover' : 'contain'](
                 width,
                 height,
                 canvasImage.width,
@@ -534,8 +535,6 @@ class Vasari extends App {
                 imageWidth,
                 imageHeight
               );
-
-              this.render2d();
             };
 
             canvasImage.src = attributes.path;
@@ -568,19 +567,30 @@ class Vasari extends App {
           : '#111';
 
         this.state.canvas.context.fillRect(
-          0,
-          60,
+          left,
+          top,
           width,
           height
         );
 
         break;
 
+      case 'DECLARE':
+        const variables = Object.keys(attributes);
+
+        for (const variable of variables) {
+          this.docState[variable] = attributes[variable];
+        }
+
+        break;
+
       case 'EVENT':
-        this.events[id] = function (event) {
+        this.events[id] = event => {
           const [{ _rawText } = {}] = element.childNodes;
 
-          eval(`(event => { ${_rawText} })(event)`);
+          const state = { ...this.docState };
+
+          eval(`(() => { ${_rawText} })()`);
         };
 
         break;
