@@ -16,6 +16,10 @@ class Document {
     }
   }
 
+  /*******************************************
+   * Init
+   *******************************************/
+
   constructor (path, attributes = {}) {
     this.type = 'document';
     this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
@@ -62,15 +66,16 @@ class Document {
     return this.data?.toString?.() || '';
   }
 
-  onReady () { /* Implements */ }
+  onScroll (event) {
 
-  open () {
-    console.log('Open Document');
+    console.log('scroll', event);
   }
 
-  close () {
-    console.log('Close Document');
-  }
+  /*******************************************
+   * Method signatures
+   *******************************************/
+
+  onReady () {}
 }
 
 export default Document;

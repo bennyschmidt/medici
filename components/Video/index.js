@@ -7,6 +7,11 @@ import { Media } from '../index.js';
  */
 
 class Video extends Media {
+
+  /*******************************************
+   * Init
+   *******************************************/
+
   constructor (
     path,
     {
@@ -44,8 +49,16 @@ class Video extends Media {
     this.volume = Math.max(0, volume);
   }
 
+  /*******************************************
+   * Instance methods
+   *******************************************/
+
   onReady () {
     this.play();
+  }
+
+  toString () {
+    return `<Video #${this.id}>`;
   }
 
   play () {

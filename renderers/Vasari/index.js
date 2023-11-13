@@ -24,7 +24,7 @@ import {
 const FPS = 1;
 
 const WINDOW_OPTIONS = {
-  title: "Window",
+  title: "Medici",
   accelerated: true,
   popupMenu: false,
   width: 1024,
@@ -71,7 +71,16 @@ class Vasari extends App {
 
     this.events = {};
     this.listeners = {};
-    this.docState = {};
+
+    this.docState = {
+      read: () => this.docState,
+
+      get: variable => this.docState[variable],
+
+      set: (variable, value) => {
+        this.docState[variable] = value;
+      }
+    };
 
     // Callback
 
@@ -153,9 +162,11 @@ class Vasari extends App {
       HTMLParser.parse(this.value.replace(/\n/g, '').trim())
     );
 
-    this.state.elements = [rootElement];
+    this.state.elements.root = rootElement;
 
-    this.state.elements.forEach(this.renderElement.bind(this));
+    for (const element of Object.values(this.state.elements)) {
+      this.renderElement(element);
+    }
   };
 
   /**
@@ -364,20 +375,25 @@ class Vasari extends App {
                 top,
                 width,
                 height,
-                hover: null,
-                click: null
+                onHover: null,
+                onClick: null,
+                component: this.state.components[id],
+                element: this.state.elements[id]
               };
             }
 
             this.listeners[id] = {
               ...this.listeners[id],
 
-              hover: nativeEvent => {
-                this.events[attributes.hover]({
+              onHover: nativeEvent => {
+                const syntheticEvent = {
                   ...nativeEvent,
 
                   event
-                });
+                };
+
+                this.events[attributes.hover](syntheticEvent);
+                this.state.components[id].onHover(syntheticEvent);
               }
             };
           }
@@ -389,20 +405,25 @@ class Vasari extends App {
                 top,
                 width,
                 height,
-                hover: null,
-                click: null
+                onHover: null,
+                onClick: null,
+                component: this.state.components[id],
+                element: this.state.elements[id]
               };
             }
 
             this.listeners[id] = {
               ...this.listeners[id],
 
-              click: nativeEvent => {
-                this.events[attributes.click]({
+              onClick: nativeEvent => {
+                const syntheticEvent = {
                   ...nativeEvent,
 
                   event
-                });
+                };
+
+                this.events[attributes.click](syntheticEvent);
+                this.state.components[id].onClick(syntheticEvent);
               }
             };
           }
@@ -411,22 +432,20 @@ class Vasari extends App {
 
     switch (tagName) {
       case 'RECT':
-        this.state.components.push(
-          new Rect(
-            left,
-            top,
-            width,
-            height,
+        this.state.components[id] = new Rect(
+          left,
+          top,
+          width,
+          height,
 
-            {
-              ...attributes,
+          {
+            ...attributes,
 
-              left: `${left}px`,
-              top: `${top}px`,
-              width: `${width}px`,
-              height: `${height}px`
-            }
-          )
+            left: `${left}px`,
+            top: `${top}px`,
+            width: `${width}px`,
+            height: `${height}px`
+          }
         );
 
         this.state.canvas.context[methodName](
@@ -439,7 +458,7 @@ class Vasari extends App {
         break;
 
       case 'TEXT':
-        this.state.components.push(
+        this.state.components[id] = (
           new Text(
             attributes.text,
             left,
@@ -467,7 +486,7 @@ class Vasari extends App {
         break;
 
       case 'DATA':
-        this.state.components.push(
+        this.state.components[id] = (
           new Data(
             attributes.list,
 
@@ -541,12 +560,12 @@ class Vasari extends App {
           }
         );
 
-        this.state.components.push(image);
+        this.state.components[id] = image;
 
         break;
 
       case 'VIEW':
-        this.state.components.push(
+        this.state.components[id] = (
           new Rect(
             left,
             top,
@@ -579,7 +598,11 @@ class Vasari extends App {
         const variables = Object.keys(attributes);
 
         for (const variable of variables) {
-          this.docState[variable] = attributes[variable];
+          const stateVariables = this.docState.read();
+
+          if (!Object.keys(stateVariables).includes(variable)) {
+            this.docState.set(variable, attributes[variable]);
+          }
         }
 
         break;
@@ -588,7 +611,7 @@ class Vasari extends App {
         this.events[id] = event => {
           const [{ _rawText } = {}] = element.childNodes;
 
-          const state = { ...this.docState };
+          const state = this.docState;
 
           eval(`(() => { ${_rawText} })()`);
         };
@@ -599,10 +622,6 @@ class Vasari extends App {
     element.childNodes.forEach(child => this.renderElement(child));
   };
 
-  open = () => this.onLoad();
-
-  close = () => this.onUnload();
-
   /*******************************************
    * Events
    *******************************************/
@@ -612,7 +631,15 @@ class Vasari extends App {
    * Handle window resize
    **/
 
-  onResize = () => this.redraw();
+  onResize = () => {
+    this.state.width = this.window.width;
+    this.state.height = this.window.height;
+
+    WINDOW_OPTIONS.width = this.state.width;
+    WINDOW_OPTIONS.height = this.state.height;
+
+    this.redraw();
+  };
 
   /**
    * onReady
@@ -627,14 +654,8 @@ class Vasari extends App {
    **/
 
   onAnimate = () => {
-    let { elements } = this.state;
-
-    if (elements?.length) {
-      elements = elements.pop();
-
-      this.state.components = [];
-      this.state.elements = [];
-    }
+    this.state.components = {};
+    this.state.elements = {};
 
     if (this.value) {
       if (this.state.canvas.context) {
@@ -698,7 +719,7 @@ class Vasari extends App {
     for (const listener of Object.keys(this.listeners)) {
       const listenerElement = this.listeners[listener];
 
-      if (!listenerElement?.hover) continue;
+      if (!listenerElement?.onHover) continue;
 
       const { left, top, width, height } = listenerElement;
 
@@ -706,7 +727,7 @@ class Vasari extends App {
       const isY = y > top && y < +top + +height;
 
       if (isX && isY) {
-        listenerElement.hover.call(listenerElement, event);
+        listenerElement.onHover.call(listenerElement, event);
       }
     }
   };
@@ -722,7 +743,7 @@ class Vasari extends App {
     for (const listener of Object.keys(this.listeners)) {
       const listenerElement = this.listeners[listener];
 
-      if (!listenerElement?.click) continue;
+      if (!listenerElement?.onClick) continue;
 
       const { left, top, width, height } = listenerElement;
 
@@ -730,10 +751,22 @@ class Vasari extends App {
       const isY = y > top && y < +top + +height;
 
       if (isX && isY) {
-        listenerElement.click.call(listenerElement, event);
+        listenerElement.onClick.call(listenerElement, event);
       }
     }
   };
+
+  /*******************************************
+   * Instance methods
+   *******************************************/
+
+  open () {
+    this.onLoad();
+  }
+
+  close () {
+    this.onUnload();
+  }
 }
 
 export default Vasari;

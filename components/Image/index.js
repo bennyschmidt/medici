@@ -42,6 +42,10 @@ class Image extends Media {
 
   static cover = Image.fit(false)
 
+  /*******************************************
+   * Init
+   *******************************************/
+
   constructor (
     path,
     {
@@ -80,6 +84,21 @@ class Image extends Media {
   get pixelHeight () {
     return `${this.height}px`;
   }
+
+  /*******************************************
+   * Instance methods
+   *******************************************/
+
+  toString () {
+    return `<Image #${this.id}>`;
+  }
+
+  /*******************************************
+   * Method signatures
+   *******************************************/
+
+  onHover () {}
+  onClick () {}
 }
 
 export default Image;

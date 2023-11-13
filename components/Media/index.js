@@ -1,4 +1,9 @@
 import fs from 'fs/promises';
+import notifier from 'node-notifier';
+
+const ERROR_MESSAGE = {
+  'HTTP/404': 'File not found.'
+};
 
 /**
  * Media
@@ -13,13 +18,24 @@ class Media {
     if (isBase64String) {
       response = filePath;
     } else {
-      response = await fs.readFile(filePath);
+      try {
+        response = await fs.readFile(filePath);
+      } catch (error) {
+        console.warn(ERROR_MESSAGE, error?.message || '(error)');
+        notifier.notify(ERROR_MESSAGE);
+
+        return;
+      }
     }
 
     if (onLoad) {
       onLoad(response);
     }
   }
+
+  /*******************************************
+   * Init
+   *******************************************/
 
   constructor (path, onReady = () => null) {
     this.source = null;
@@ -82,9 +98,13 @@ class Media {
     return `${this.source}`;
   }
 
-  onReady () { /* Implements */ }
-  play () { /* Implements */ }
-  stop () { /* Implements */ }
+  /*******************************************
+   * Method signatures
+   *******************************************/
+
+  onReady () {}
+  play () {}
+  stop () {}
 }
 
 export default Media;

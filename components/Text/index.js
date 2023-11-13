@@ -5,6 +5,11 @@ import { randomUUID } from 'crypto';
  */
 
 class Text {
+
+  /*******************************************
+   * Init
+   *******************************************/
+
   constructor (
     text,
     x,
@@ -22,8 +27,15 @@ class Text {
   }
 
   toString () {
-    return `${this.text}`;
+    return this.text;
   }
+
+  /*******************************************
+   * Method signatures
+   *******************************************/
+
+  onHover () {}
+  onClick () {}
 }
 
 export default Text;

@@ -5,6 +5,11 @@ import { randomUUID } from 'crypto';
  */
 
 class Data {
+
+  /*******************************************
+   * Init
+   *******************************************/
+
   constructor (list, attributes = {}) {
     this.type = 'data';
     this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
@@ -12,7 +17,7 @@ class Data {
     this.attributes = attributes;
 
     list.trim().split(',').forEach(property => {
-      const [key, value] = property.trim().split(':');
+      const [key = '', value = ''] = property.trim().split(':');
 
       let parsedValue = value.trim();
 

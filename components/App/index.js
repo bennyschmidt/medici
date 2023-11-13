@@ -7,6 +7,11 @@ import { Page } from '../index.js';
  */
 
 class App extends Page {
+
+  /*******************************************
+   * Init
+   *******************************************/
+
   constructor (
     path,
     variables = {},

@@ -5,6 +5,11 @@ import { randomUUID } from 'crypto';
  */
 
 class Rect {
+
+  /*******************************************
+   * Init
+   *******************************************/
+
   constructor (
     x,
     y,
@@ -22,8 +27,15 @@ class Rect {
   }
 
   toString () {
-    return `<Rect #${randomUUID().slice(0, 8)}>`;
+    return `<Rect #${this.id}>`;
   }
+
+  /*******************************************
+   * Method signatures
+   *******************************************/
+
+  onHover () {}
+  onClick () {}
 }
 
 export default Rect;

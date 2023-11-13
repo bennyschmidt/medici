@@ -1,7 +1,7 @@
 {
   "name": "medici",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "start": "node index"
   },
@@ -9,6 +9,7 @@
     "@kmamal/gl": "^6.0.2-1",
     "@kmamal/sdl": "^0.9.0",
     "canvas": "^2.11.2",
-    "node-html-parser": "^6.1.11"
+    "node-html-parser": "^6.1.11",
+    "node-notifier": "^10.0.1"
   }
 }

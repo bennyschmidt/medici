@@ -3,11 +3,12 @@
  * A JSX-native peer-to-peer browser
  *******************************************/
 
+import notifier from 'node-notifier';
+
 import __dirname from '../../__dirname.js';
+import Peers from '../../peers.json' assert { type: 'json' };
 
 import { Vasari } from '../index.js';
-
-import Peers from '../../peers.json' assert { type: 'json' };
 
 const FILE_EXTENSIONS = {
   app: 'jsx',
@@ -17,6 +18,10 @@ const FILE_EXTENSIONS = {
   page: 'jsx',
   text: 'txt',
   video: 'mp4'
+};
+
+const ERROR_MESSAGE = {
+  'HTTP/404': 'Error fetching resource.'
 };
 
 class Medici extends Vasari {
@@ -37,9 +42,12 @@ class Medici extends Vasari {
    *******************************************/
 
   onNavigate = async path => {
-    const rootElement = this.state.elements.find(({ id, rawTagName }) => (
-      id === 'root' || rawTagName === 'Medici'
-    ));
+    const rootElement = (
+      this.state.elements.root ||
+      Object.values(this.state.elements).find(({ rawTagName }) => (
+        rawTagName === 'Medici'
+      ))
+    );
 
     const [
       namespace,
@@ -47,21 +55,30 @@ class Medici extends Vasari {
       fileName
     ] = path.toLowerCase().split(':');
 
-    const response = await fetch(
-      `${Peers[namespace]}/${contentType}/${fileName}.${FILE_EXTENSIONS[contentType]}`
-    );
-
     const type = contentType.toUpperCase();
-
     const isMedia = type === 'IMAGE' || type === 'VIDEO';
 
-    if (!response?.ok) return;
+    let file = '';
 
-    let file = isMedia
-      ? await response.arrayBuffer()
-      : await response.text();
+    try {
+      const response = await fetch(
+        `${Peers[namespace]}/${contentType}/${fileName}.${FILE_EXTENSIONS[contentType]}`
+      );
 
-    if (!file?.toString) return;
+      if (!response?.ok) return;
+
+      file = isMedia
+        ? await response.arrayBuffer()
+        : await response.text();
+
+      if (!file?.toString) return;
+    } catch (error) {
+      const errorType = 'HTTP/404';
+      const errorMessage = `${errorType} ${ERROR_MESSAGE[errorType]}`;
+
+      console.warn(errorMessage, error?.message ||'(error)');
+      notifier.notify(errorMessage);
+    }
 
     rootElement.innerHTML = file.toString();
 
@@ -199,9 +216,17 @@ class Medici extends Vasari {
     }
   };
 
-  open = () => this.onLoad();
+  /*******************************************
+   * Instance methods
+   *******************************************/
 
-  close = () => this.onUnload();
+  open () {
+    this.onLoad();
+  }
+
+  close () {
+    this.onUnload();
+  }
 }
 
 export default Medici;

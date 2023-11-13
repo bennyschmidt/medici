@@ -7,6 +7,11 @@ import { Document } from '../index.js';
  */
 
 class Page extends Document {
+
+  /*******************************************
+   * Init
+   *******************************************/
+
   constructor (
     path,
     {
@@ -26,6 +31,10 @@ class Page extends Document {
     this.attributes = attributes;
   }
 
+  /*******************************************
+   * Instance methods
+   *******************************************/
+
   onLoad (source) {
     const jsx = source?.toString();
 
@@ -39,6 +48,10 @@ class Page extends Document {
     this.format = type[1];
 
     this.onReady();
+  }
+
+  toString () {
+    return `<Page #${this.id}>`;
   }
 }
 
