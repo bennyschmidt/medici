@@ -1,4 +1,4 @@
-import { Medici } from './apps/index.js';
+import { Medici } from './renderers/index.js';
 
 const browser = new Medici();
 
