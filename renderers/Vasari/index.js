@@ -7,11 +7,12 @@
  * JSX file.
  *******************************************/
 
-import __dirname from '../../__dirname.js';
-
+import { randomUUID } from 'crypto';
 import sdl from '@kmamal/sdl';
 import HTMLParser from 'node-html-parser';
 import Canvas from 'canvas';
+
+import __dirname from '../../__dirname.js';
 
 import {
   App,
@@ -24,13 +25,16 @@ import {
 const FPS = 1;
 
 const WINDOW_OPTIONS = {
-  title: "Medici",
+  title: 'Medici',
   accelerated: true,
   popupMenu: false,
   width: 1024,
   height: 576,
-  resizable: true
+  resizable: false
 };
+
+const DEFAULT_FONT_SIZE = 13;
+const DEFAULT_FONT = `normal 500 ${DEFAULT_FONT_SIZE}px sans-serif`;
 
 class Vasari extends App {
 
@@ -275,6 +279,7 @@ class Vasari extends App {
     const attributes = this.getElementAttributes(element);
 
     this.state.canvas.context = this.state.canvas.getContext('2d');
+    this.state.canvas.context.font = DEFAULT_FONT;
 
     const {
       type,
@@ -333,7 +338,10 @@ class Vasari extends App {
     delete attributes.y;
 
     const tagName = method.toUpperCase();
-    const { id } = attributes;
+
+    const {
+      id = `${method.toLowerCase()}-${randomUUID().slice(0, 8)}`
+    } = attributes;
 
     switch (tagName) {
       case 'RECT':
@@ -431,6 +439,11 @@ class Vasari extends App {
     }
 
     switch (tagName) {
+
+      /*******************************************
+       * Elements
+       *******************************************/
+
       case 'RECT':
         this.state.components[id] = new Rect(
           left,
@@ -564,6 +577,46 @@ class Vasari extends App {
 
         break;
 
+      /*******************************************
+       * Script elements
+       *******************************************/
+
+      case 'DECLARE':
+        const variables = Object.keys(attributes);
+
+        for (const variable of variables) {
+          const stateVariables = this.docState.read();
+
+          if (!Object.keys(stateVariables).includes(variable)) {
+            this.docState.set(variable, attributes[variable]);
+          }
+        }
+
+        if (element.childNodes?.length) {
+          const [{ _rawText } = {}] = element.childNodes;
+
+          const state = this.docState;
+
+          eval(`(() => { ${_rawText} })()`);
+        }
+
+        break;
+
+      case 'EVENT':
+        this.events[id] = event => {
+          const [{ _rawText } = {}] = element.childNodes;
+
+          const state = this.docState;
+
+          eval(`(() => { ${_rawText} })()`);
+        };
+
+        break;
+
+      /*******************************************
+       * Abstract elements
+       *******************************************/
+
       case 'VIEW':
         this.state.components[id] = (
           new Rect(
@@ -572,7 +625,7 @@ class Vasari extends App {
             width,
             height,
             {
-              id: attributes.id,
+              id,
               left: `${left}px`,
               top: `${top}px`,
               width: `${width}px`,
@@ -594,27 +647,74 @@ class Vasari extends App {
 
         break;
 
-      case 'DECLARE':
-        const variables = Object.keys(attributes);
+      case 'INPUT':
+        this.state.components[id] = (
+          new Rect(
+            left,
+            top,
+            width,
+            height,
+            {
+              id,
+              left: `${left}px`,
+              top: `${top}px`,
+              width: `${width}px`,
+              height: `${height}px`
+            }
+          )
+        );
 
-        for (const variable of variables) {
-          const stateVariables = this.docState.read();
+        this.state.canvas.context[`${type}Rect`](
+          left,
+          top,
+          width,
+          height
+        );
 
-          if (!Object.keys(stateVariables).includes(variable)) {
-            this.docState.set(variable, attributes[variable]);
-          }
-        }
+        this.state.canvas.context.font = (
+          DEFAULT_FONT.replace('normal', 'italic')
+        );
 
-        break;
+        const padding = (height / 2) + 4;
 
-      case 'EVENT':
-        this.events[id] = event => {
-          const [{ _rawText } = {}] = element.childNodes;
-
-          const state = this.docState;
-
-          eval(`(() => { ${_rawText} })()`);
+        const textBox = {
+          left: +left + (padding / 2),
+          top: +top + padding,
+          width: width - padding,
+          height: height - (padding * 2)
         };
+
+        attributes.left = textBox.left;
+        attributes.top = textBox.top;
+        attributes.width = textBox.width;
+        attributes.height = textBox.height;
+
+        this.state.components[id] = (
+          new Text(
+            attributes.text,
+            textBox.left,
+            textBox.top,
+            textBox.width,
+
+            {
+              ...attributes,
+
+              x: `${textBox.left}px`,
+              y: `${textBox.top}px`,
+              width: `${textBox.width}px`,
+              height: `${textBox.height}px`
+            }
+          )
+        );
+
+        this.state.canvas.context.fillStyle = attributes.textStyle;
+
+        this.state.canvas.context.fillText(
+          attributes.placeholder || 'Type something...',
+          textBox.left,
+          textBox.top,
+          textBox.width
+        );
 
         break;
     }

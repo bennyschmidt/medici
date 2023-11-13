@@ -119,8 +119,7 @@ class Medici extends Vasari {
         this.value = `
           <Medici>
             <Text fill style="white" text="${file}" x={10} y={74} maxWidth={1024} />
-            <Text stroke style="#666" text="Search apps & content..." x={20} y={33} maxWidth={984} />
-            <Rect stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" x={5} y={5} width={1014} height={50} />
+            <Input stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={50} />
           </Medici>
         `;
 
@@ -136,8 +135,7 @@ class Medici extends Vasari {
         this.value = `
           <Medici>
             <Data style="white" list="${list}" x={10} y={74} maxWidth={1024} />
-            <Text stroke style="#666" text="Search apps & content..." x={20} y={33} maxWidth={984} />
-            <Rect stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" x={5} y={5} width={1014} height={50} />
+            <Input stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={50} />
           </Medici>
         `;
 
@@ -147,8 +145,7 @@ class Medici extends Vasari {
         this.value = `
           <Medici>
             <Image cover path="${file}" x={0} y={64} width={1024} height={515} />
-            <Text stroke style="#666" text="Search apps & content..." x={20} y={33} maxWidth={984} />
-            <Rect stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" x={5} y={5} width={1014} height={50} />
+            <Input stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={50} />
           </Medici>
         `;
 
@@ -159,8 +156,7 @@ class Medici extends Vasari {
           <Medici>
             <Text fill style="white" text="Audio not yet supported." x={10} y={74} maxWidth={1024} />
             <Audio path="${file}" />
-            <Text stroke style="#666" text="Search apps & content..." x={20} y={33} maxWidth={984} />
-            <Rect stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" x={5} y={5} width={1014} height={50} />
+            <Input stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={50} />
           </Medici>
         `;
 
@@ -171,8 +167,7 @@ class Medici extends Vasari {
           <Medici>
             <Text fill style="white" text="Video not yet supported." x={10} y={74} maxWidth={1024} />
             <Video path="${file}" />
-            <Text stroke style="#666" text="Search apps & content..." x={20} y={33} maxWidth={984} />
-            <Rect stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" x={5} y={5} width={1014} height={50} />
+            <Input stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={50} />
           </Medici>
         `;
 
@@ -194,8 +189,7 @@ class Medici extends Vasari {
             <Rect fill style="#222" x={0} y={64} width={1024} height={515}>
               ${rootElement.innerHTML}
             </Rect>
-            <Text stroke style="#666" text="Search apps & content..." x={20} y={33} maxWidth={984} />
-            <Rect stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" x={5} y={5} width={1014} height={50} />
+            <Input stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={50} />
           </Medici>
         `;
 
@@ -207,8 +201,7 @@ class Medici extends Vasari {
             <Rect fill style="#222" x={0} y={64} width={1024} height={515}>
               ${rootElement.innerHTML}
             </Rect>
-            <Text stroke style="#666" text="Search apps & content..." x={20} y={33} maxWidth={984} />
-            <Rect stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" x={5} y={5} width={1014} height={50} />
+            <Input stroke lineJoin="bevel" lineWidth={2} style="linear-gradient(purple, red, 0, 0, 0, 150)" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={50} />
           </Medici>
         `;
 

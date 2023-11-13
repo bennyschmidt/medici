@@ -18,7 +18,7 @@ class Rect {
     attributes = {}
   ) {
     this.type = 'rect';
-    this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
+    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.x = x;
     this.y = y;
     this.width = width;
