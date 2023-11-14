@@ -19,7 +19,9 @@ import {
   Rect,
   Text,
   Data,
-  Image
+  Image,
+  Input,
+  View
 } from '../../components/index.js';
 
 const FPS = 1;
@@ -104,7 +106,7 @@ class Vasari extends App {
    * close
    * onResize
    * onReady
-   * onAnimate
+   * render
    * onLoad
    * onUnload
    *******************************************/
@@ -166,11 +168,7 @@ class Vasari extends App {
       HTMLParser.parse(this.value.replace(/\n/g, '').trim())
     );
 
-    this.state.elements.root = rootElement;
-
-    for (const element of Object.values(this.state.elements)) {
-      this.renderElement(element);
-    }
+    return rootElement;
   };
 
   /**
@@ -345,7 +343,6 @@ class Vasari extends App {
 
     switch (tagName) {
       case 'RECT':
-      case 'TEXT':
       case 'IMAGE':
         const isEventTarget = (
           attributes.hover || attributes.click
@@ -577,6 +574,138 @@ class Vasari extends App {
 
         break;
 
+      case 'VIEW':
+        this.state.components[id] = (
+          new View(
+            left,
+            top,
+            width,
+            height,
+            {
+              id,
+              left: `${left}px`,
+              top: `${top}px`,
+              width: `${width}px`,
+              height: `${height}px`
+            }
+          )
+        );
+
+        this.state.canvas.context.fillStyle = 'black';
+
+        this.state.canvas.context.fillRect(
+          left,
+          top,
+          width,
+          height
+        );
+
+        break;
+
+      case 'INPUT':
+        const placeholder = 'Search content & apps...';
+
+        const input = (
+          new Input(
+            left,
+            top,
+            width,
+            height,
+            {
+              id,
+              left: `${left}px`,
+              top: `${top}px`,
+              width: `${width}px`,
+              height: `${height}px`,
+              textStyle: attributes.textStyle
+            },
+            placeholder
+          )
+        );
+
+        this.state.components[id] = input;
+
+        this.state.canvas.context[`${type}Rect`](
+          left,
+          top,
+          width,
+          height
+        );
+
+        const { textComponent } = input;
+
+        this.state.components[textComponent.id] = textComponent;
+
+        this.state.canvas.context.font = (
+          DEFAULT_FONT.replace('normal', 'italic')
+        );
+
+        attributes.left = textComponent.left;
+        attributes.top = textComponent.top;
+        attributes.width = textComponent.width;
+        attributes.height = textComponent.height;
+
+        this.state.canvas.context.fillStyle = textComponent.attributes.textStyle;
+
+        this.state.canvas.context.fillText(
+          placeholder,
+          textComponent.x,
+          textComponent.y,
+          textComponent.width
+        );
+
+        const inputEvent = {
+          id,
+          element: {
+            ...element,
+            ...attributes,
+
+            tagName,
+            localName: tagName.toLowerCase(),
+            appearance: {
+              [type]: true,
+              style,
+              left,
+              top,
+              width,
+              maxWidth,
+              height,
+              shadowColor,
+              shadowBlur,
+              lineJoin,
+              lineWidth
+            }
+          }
+        };
+
+        if (!this.listeners[id]) {
+          this.listeners[id] = {
+            left,
+            top,
+            width,
+            height,
+            onClick: null,
+            component: this.state.components[id],
+            element: this.state.elements[id]
+          };
+        }
+
+        this.listeners[id] = {
+          ...this.listeners[id],
+
+          onClick: nativeEvent => {
+            const syntheticEvent = {
+              ...nativeEvent,
+
+              event: inputEvent
+            };
+
+            input.onClick(syntheticEvent);
+          }
+        };
+
+        break;
+
       /*******************************************
        * Script elements
        *******************************************/
@@ -612,114 +741,38 @@ class Vasari extends App {
         };
 
         break;
-
-      /*******************************************
-       * Abstract elements
-       *******************************************/
-
-      case 'VIEW':
-        this.state.components[id] = (
-          new Rect(
-            left,
-            top,
-            width,
-            height,
-            {
-              id,
-              left: `${left}px`,
-              top: `${top}px`,
-              width: `${width}px`,
-              height: `${height}px`
-            }
-          )
-        );
-
-        this.state.canvas.context.fillStyle = element.childNodes.length
-          ? '#fff'
-          : '#111';
-
-        this.state.canvas.context.fillRect(
-          left,
-          top,
-          width,
-          height
-        );
-
-        break;
-
-      case 'INPUT':
-        this.state.components[id] = (
-          new Rect(
-            left,
-            top,
-            width,
-            height,
-            {
-              id,
-              left: `${left}px`,
-              top: `${top}px`,
-              width: `${width}px`,
-              height: `${height}px`
-            }
-          )
-        );
-
-        this.state.canvas.context[`${type}Rect`](
-          left,
-          top,
-          width,
-          height
-        );
-
-        this.state.canvas.context.font = (
-          DEFAULT_FONT.replace('normal', 'italic')
-        );
-
-        const padding = (height / 2) + 4;
-
-        const textBox = {
-          left: +left + (padding / 2),
-          top: +top + padding,
-          width: width - padding,
-          height: height - (padding * 2)
-        };
-
-        attributes.left = textBox.left;
-        attributes.top = textBox.top;
-        attributes.width = textBox.width;
-        attributes.height = textBox.height;
-
-        this.state.components[id] = (
-          new Text(
-            attributes.text,
-            textBox.left,
-            textBox.top,
-            textBox.width,
-
-            {
-              ...attributes,
-
-              x: `${textBox.left}px`,
-              y: `${textBox.top}px`,
-              width: `${textBox.width}px`,
-              height: `${textBox.height}px`
-            }
-          )
-        );
-
-        this.state.canvas.context.fillStyle = attributes.textStyle;
-
-        this.state.canvas.context.fillText(
-          attributes.placeholder || 'Type something...',
-          textBox.left,
-          textBox.top,
-          textBox.width
-        );
-
-        break;
     }
 
     element.childNodes.forEach(child => this.renderElement(child));
+  };
+
+  /**
+   * render
+   * Parse JSX and render
+   **/
+
+  render = () => {
+    this.state.components = {};
+    this.state.elements = {};
+
+    if (this.value) {
+      if (this.state.canvas.context) {
+        this.state.canvas.context.clearRect(
+          0,
+          0,
+          this.state.width,
+          this.state.height
+        );
+      }
+
+      this.state.elements.root = this.parseJSX();
+
+      for (const element of Object.values(this.state.elements)) {
+        this.renderElement(element);
+      }
+    }
+
+    this.render2d();
   };
 
   /*******************************************
@@ -749,31 +802,6 @@ class Vasari extends App {
   onReady = () => this.open();
 
   /**
-   * onAnimate
-   * Handle window animate
-   **/
-
-  onAnimate = () => {
-    this.state.components = {};
-    this.state.elements = {};
-
-    if (this.value) {
-      if (this.state.canvas.context) {
-        this.state.canvas.context.clearRect(
-          0,
-          0,
-          this.state.width,
-          this.state.height
-        );
-      }
-
-      this.parseJSX();
-    }
-
-    this.render2d();
-  };
-
-  /**
    * onLoad
    * Handle window load
    **/
@@ -793,7 +821,7 @@ class Vasari extends App {
     this.window.on('mouseMove', onHover);
 
     this.state.canvas = Canvas.createCanvas(this.state.width, this.state.height);
-    this.interval = setInterval(this.onAnimate.bind(this), (1000 / FPS));
+    this.interval = setInterval(this.render.bind(this), (1000 / FPS));
   };
 
   /**

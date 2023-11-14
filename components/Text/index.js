@@ -29,13 +29,6 @@ class Text {
   toString () {
     return this.text;
   }
-
-  /*******************************************
-   * Method signatures
-   *******************************************/
-
-  onHover () {}
-  onClick () {}
 }
 
 export default Text;
