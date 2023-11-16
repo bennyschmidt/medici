@@ -119,7 +119,7 @@ class Medici extends Vasari {
         this.value = `
           <Medici>
             <Text fill style="white" text="${file}" x={10} y={60} maxWidth={1024} />
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={30} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
 
@@ -135,7 +135,7 @@ class Medici extends Vasari {
         this.value = `
           <Medici>
             <Data style="white" list="${list}" x={10} y={60} maxWidth={1024} />
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={30} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
 
@@ -145,7 +145,7 @@ class Medici extends Vasari {
         this.value = `
           <Medici>
             <Image cover path="${file}" x={0} y={40} width={1024} height={544} />
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={30} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
 
@@ -156,7 +156,7 @@ class Medici extends Vasari {
           <Medici>
             <Text fill style="white" text="Audio not yet supported." x={10} y={60} maxWidth={1024} />
             <Audio ath="${file}" />
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={30} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
 
@@ -167,7 +167,7 @@ class Medici extends Vasari {
           <Medici>
             <Text fill style="white" text="Video not yet supported." x={10} y={60} maxWidth={1024} />
             <Video ath="${file}" />
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={30} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
 
@@ -189,7 +189,7 @@ class Medici extends Vasari {
             <Rect fill style="#111" x={0} y={40} width={1024} height={544}>
               ${rootElement.innerHTML}
             </Rect>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={30} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
 
@@ -201,7 +201,7 @@ class Medici extends Vasari {
             <Rect fill style="#111" x={0} y={40} width={1024} height={544}>
               ${rootElement.innerHTML}
             </Rect>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="#666" x={5} y={5} width={1014} height={30} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
 

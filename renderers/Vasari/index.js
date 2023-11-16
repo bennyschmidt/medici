@@ -24,7 +24,9 @@ import {
   View
 } from '../../components/index.js';
 
-const FPS = 1;
+const FPS = 30;
+
+const DEBOUNCE_INTERVAL = 10;
 
 const WINDOW_OPTIONS = {
   title: 'Medici',
@@ -63,8 +65,9 @@ class Vasari extends App {
           format: 'bgra32',
           buffer: Buffer.alloc(stride * height),
           canvas: null,
-          elements: [],
-          components: []
+          elements: {},
+          components: {},
+          search: ''
         }
       }
     );
@@ -87,6 +90,8 @@ class Vasari extends App {
         this.docState[variable] = value;
       }
     };
+
+    this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
 
     // Callback
 
@@ -603,106 +608,211 @@ class Vasari extends App {
         break;
 
       case 'INPUT':
-        const placeholder = 'Search content & apps...';
+        const component = this.state.components[id];
 
-        const input = (
-          new Input(
-            left,
-            top,
-            width,
-            height,
-            {
-              id,
-              left: `${left}px`,
-              top: `${top}px`,
-              width: `${width}px`,
-              height: `${height}px`,
-              textStyle: attributes.textStyle
-            },
-            placeholder
-          )
-        );
+        if (!component || component.value !== this.state.search) {
+          const {
+            placeholder = 'Search apps & content...'
+          } = component || {};
 
-        this.state.components[id] = input;
+          if (component?.value) {
+            this.state.search = component.value;
+          }
 
-        this.state.canvas.context[`${type}Rect`](
-          left,
-          top,
-          width,
-          height
-        );
-
-        const { textComponent } = input;
-
-        this.state.components[textComponent.id] = textComponent;
-
-        this.state.canvas.context.font = (
-          DEFAULT_FONT.replace('normal', 'italic')
-        );
-
-        attributes.left = textComponent.left;
-        attributes.top = textComponent.top;
-        attributes.width = textComponent.width;
-        attributes.height = textComponent.height;
-
-        this.state.canvas.context.fillStyle = textComponent.attributes.textStyle;
-
-        this.state.canvas.context.fillText(
-          placeholder,
-          textComponent.x,
-          textComponent.y,
-          textComponent.width
-        );
-
-        const inputEvent = {
-          id,
-          element: {
-            ...element,
-            ...attributes,
-
-            tagName,
-            localName: tagName.toLowerCase(),
-            appearance: {
-              [type]: true,
-              style,
+          const input = (
+            new Input(
               left,
               top,
               width,
-              maxWidth,
               height,
-              shadowColor,
-              shadowBlur,
-              lineJoin,
-              lineWidth
-            }
-          }
-        };
+              {
+                id,
+                left: `${left}px`,
+                top: `${top}px`,
+                width: `${width}px`,
+                height: `${height}px`,
+                textStyle: attributes.textStyle
+              },
+              placeholder
+            )
+          );
 
-        if (!this.listeners[id]) {
-          this.listeners[id] = {
+          this.state.components[id] = input;
+
+          this.state.canvas.context[`${type}Rect`](
             left,
             top,
             width,
-            height,
-            onClick: null,
-            component: this.state.components[id],
-            element: this.state.elements[id]
+            height
+          );
+
+          const { textComponent } = input;
+
+          this.state.components[textComponent.id] = textComponent;
+
+          if (this.state.search) {
+            this.state.canvas.context.fillStyle = textComponent.attributes.textStyle;
+
+            this.state.canvas.context.font = (
+              DEFAULT_FONT.replace('italic', 'normal')
+            );
+          } else {
+            this.state.canvas.context.fillStyle = '#666';
+
+            this.state.canvas.context.font = (
+              DEFAULT_FONT.replace('normal', 'italic')
+            );
+          }
+
+          attributes.left = textComponent.left;
+          attributes.top = textComponent.top;
+          attributes.width = textComponent.width;
+          attributes.height = textComponent.height;
+
+          this.state.canvas.context.fillText(
+            this.state.search || placeholder,
+            textComponent.x,
+            textComponent.y,
+            textComponent.width
+          );
+
+          const inputEvent = {
+            id,
+            element: {
+              ...element,
+              ...attributes,
+
+              tagName,
+              localName: tagName.toLowerCase(),
+              appearance: {
+                [type]: true,
+                style,
+                left,
+                top,
+                width,
+                maxWidth,
+                height,
+                shadowColor,
+                shadowBlur,
+                lineJoin,
+                lineWidth
+              }
+            }
+          };
+
+          if (!this.listeners[id]) {
+            this.listeners[id] = {
+              left,
+              top,
+              width,
+              height,
+              onClick: null,
+              onKeyDown: null,
+              component: this.state.components[id],
+              element: this.state.elements[id]
+            };
+          }
+
+          this.listeners[id] = {
+            ...this.listeners[id],
+
+            component,
+
+            onClick: nativeEvent => {
+              const component = this.state.components[id];
+
+              this.listeners[id].component =
+              this.state.components[id] = {
+                ...component,
+
+                // isFocused: true,
+                placeholder: '',
+
+                textComponent: {
+                  ...component.textComponent,
+
+                  text: input.value
+                }
+              };
+
+              const syntheticEvent = {
+                ...nativeEvent,
+
+                event: inputEvent
+              };
+
+              component.onClick.call(component, syntheticEvent);
+            },
+
+            onKeyDown: nativeEvent => {
+              const component = this.state.components[id];
+
+              // if (!component?.isFocused) return;
+
+              const { key = '' } = nativeEvent;
+
+              switch (key) {
+                case 'shift':
+                case 'alt':
+                case 'ctrl':
+                case 'option':
+                case 'cmd':
+                case 'meta':
+                case 'fn':
+                  break;
+
+                case 'space':
+                  this.state.search += ' ';
+
+                  break;
+
+                case 'tab':
+                  this.state.search += '  ';
+
+                  break;
+
+                case 'backspace':
+                  this.state.search = (
+                    this.state.search.substring(0, this.state.search.length - 1)
+                  );
+
+                  break;
+
+                default:
+                  this.state.search += key;
+              }
+
+              const syntheticEvent = {
+                ...nativeEvent,
+
+                event: inputEvent,
+                value: this.state.search
+              };
+
+              this.listeners[id].component =
+              this.state.components[id] = {
+                ...component,
+
+                textStyle: 'white',
+                textComponent: {
+                  ...component.textComponent,
+
+                  text: this.state.search,
+                  style: 'white',
+
+                  attributes: {
+                    ...component.textComponent.attributes,
+
+                    textStyle: 'white'
+                  }
+                }
+              };
+
+              component.onKeyDown.call(component, syntheticEvent);
+              this.render();
+            }
           };
         }
-
-        this.listeners[id] = {
-          ...this.listeners[id],
-
-          onClick: nativeEvent => {
-            const syntheticEvent = {
-              ...nativeEvent,
-
-              event: inputEvent
-            };
-
-            input.onClick(syntheticEvent);
-          }
-        };
 
         break;
 
@@ -752,9 +862,6 @@ class Vasari extends App {
    **/
 
   render = () => {
-    this.state.components = {};
-    this.state.elements = {};
-
     if (this.value) {
       if (this.state.canvas.context) {
         this.state.canvas.context.clearRect(
@@ -810,6 +917,7 @@ class Vasari extends App {
     const onResize = this.onResize.bind(this);
     const onClick = this.onClick.bind(this);
     const onHover = this.onHover.bind(this);
+    const onKeyDown = this.onKeyDown.bind(this);
 
     this.window.off('resize', onResize);
     this.window.on('resize', onResize);
@@ -820,8 +928,12 @@ class Vasari extends App {
     this.window.off('mouseMove', onHover);
     this.window.on('mouseMove', onHover);
 
+    this.window.off('keyDown', onKeyDown);
+    this.window.on('keyDown', onKeyDown);
+
     this.state.canvas = Canvas.createCanvas(this.state.width, this.state.height);
-    this.interval = setInterval(this.render.bind(this), (1000 / FPS));
+    // this.interval = setInterval(this.render.bind(this), (1000 / FPS));
+    this.render();
   };
 
   /**
@@ -832,7 +944,8 @@ class Vasari extends App {
   onUnload = () => {
     this.window.off('resize', this.onResize.bind(this));
     this.window.off('mouseButtonDown', this.onClick.bind(this));
-    this.window.off('mouseMove', onHover);
+    this.window.off('mouseMove', this.onHover.bind(this));
+    this.window.off('keyDown', this.onKeyDown.bind(this));
     clearInterval(this.interval);
   };
 
@@ -842,22 +955,31 @@ class Vasari extends App {
    **/
 
   onHover = event => {
+    if (this._nextEvent > Date.now()) return;
+
     const { x, y } = event;
 
+    let isX = false;
+    let isY = false;
+
+    let listenerElement;
+
     for (const listener of Object.keys(this.listeners)) {
-      const listenerElement = this.listeners[listener];
+      listenerElement = this.listeners[listener];
 
       if (!listenerElement?.onHover) continue;
 
       const { left, top, width, height } = listenerElement;
 
-      const isX = x > left && x < +left + +width;
-      const isY = y > top && y < +top + +height;
-
-      if (isX && isY) {
-        listenerElement.onHover.call(listenerElement, event);
-      }
+      isX = x > left && x < +left + +width;
+      isY = y > top && y < +top + +height;
     }
+
+    if (!listenerElement?.onKeyDown || !isX || !isY) return;
+
+    listenerElement.onHover.call(listenerElement, event);
+
+    this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
   };
 
   /**
@@ -866,22 +988,54 @@ class Vasari extends App {
    **/
 
   onClick = event => {
+    if (this._nextEvent > Date.now()) return;
+
     const { x, y } = event;
 
+    let isX = false;
+    let isY = false;
+
+    let listenerElement;
+
     for (const listener of Object.keys(this.listeners)) {
-      const listenerElement = this.listeners[listener];
+      listenerElement = this.listeners[listener];
 
       if (!listenerElement?.onClick) continue;
 
       const { left, top, width, height } = listenerElement;
 
-      const isX = x > left && x < +left + +width;
-      const isY = y > top && y < +top + +height;
-
-      if (isX && isY) {
-        listenerElement.onClick.call(listenerElement, event);
-      }
+      isX = x > left && x < +left + +width;
+      isY = y > top && y < +top + +height;
     }
+
+    if (!listenerElement?.onKeyDown || !isX || !isY) return;
+
+    listenerElement.onClick.call(listenerElement, event);
+
+    this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
+  };
+
+  /**
+   * onKeyDown
+   * Global keydown router
+   **/
+
+  onKeyDown = event => {
+    if (this._nextEvent > Date.now()) return;
+
+    let listenerElement;
+
+    for (const listener of Object.keys(this.listeners)) {
+      listenerElement = this.listeners[listener];
+
+      if (!listenerElement?.onKeyDown) continue;
+    }
+
+    if (!listenerElement?.onKeyDown) return;
+
+    listenerElement.onKeyDown.call(listenerElement, event);
+
+    this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
   };
 
   /*******************************************

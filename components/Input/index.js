@@ -74,11 +74,17 @@ class Input extends Rect {
     return `<Input #${this.id}>`;
   }
 
-  onClick (event) {
+  onKeyDown = event => {
+    this.value = event.value;
+
+    console.log('Input.onKeyDown', this.value);
+  };
+
+  onClick = () => {
     this.isFocused = true;
-    this.placeholder = '';
-    console.log('onClick', event.type);
-  }
+
+    console.log('Input.onClick', this.isFocused);
+  };
 
   /*******************************************
    * Method signatures
