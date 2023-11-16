@@ -207,6 +207,8 @@ class Medici extends Vasari {
 
         break;
     }
+
+    this.render();
   };
 
   /*******************************************

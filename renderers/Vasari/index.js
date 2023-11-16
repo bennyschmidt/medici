@@ -851,6 +851,13 @@ class Vasari extends App {
               this.keys[key] = key;
 
               switch (key) {
+                case 'return':
+                  if (this.onNavigate) {
+                    this.onNavigate(this.state.search);
+
+                    return;
+                  }
+
                 case 'capslock':
                 case 'shift':
                 case 'alt':
