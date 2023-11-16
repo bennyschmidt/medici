@@ -40,6 +40,101 @@ const WINDOW_OPTIONS = {
 const DEFAULT_FONT_SIZE = 13;
 const DEFAULT_FONT = `normal 500 ${DEFAULT_FONT_SIZE}px sans-serif`;
 
+const PRINTABLE_KEYS = [
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '0',
+  'q',
+  'w',
+  'e',
+  'r',
+  't',
+  'y',
+  'u',
+  'i',
+  'o',
+  'p',
+  'a',
+  's',
+  'd',
+  'f',
+  'g',
+  'h',
+  'j',
+  'k',
+  'l',
+  'z',
+  'x',
+  'c',
+  'v',
+  'b',
+  'n',
+  'm',
+  '`',
+  '~',
+  '!',
+  '@',
+  '#',
+  '$',
+  '%',
+  '^',
+  '&',
+  '*',
+  '(',
+  ')',
+  '[',
+  '{',
+  ']',
+  '}',
+  '-',
+  '_',
+  '=',
+  '+',
+  ';',
+  ':',
+  '\'',
+  '"',
+  ',',
+  '<',
+  '.',
+  '>',
+  '/',
+  '?',
+  '\\',
+  '|'
+];
+
+const SHIFT_KEYS = {
+  '`': '~',
+  '1': '!',
+  '2': '@',
+  '3': '#',
+  '4': '$',
+  '5': '%',
+  '6': '^',
+  '7': '&',
+  '8': '*',
+  '9': '(',
+  '10': ')',
+  '[': '{',
+  ']': '}',
+  '-': '_',
+  '=': '+',
+  ';': ':',
+  '\'': '"',
+  ',': '<',
+  '.': '>',
+  '/': '?',
+  '\\': '|'
+};
+
 class Vasari extends App {
 
   /*******************************************
@@ -78,9 +173,6 @@ class Vasari extends App {
       host: null
     };
 
-    this.events = {};
-    this.listeners = {};
-
     this.docState = {
       read: () => this.docState,
 
@@ -91,6 +183,9 @@ class Vasari extends App {
       }
     };
 
+    this.keys = {};
+    this.events = {};
+    this.listeners = {};
     this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
 
     // Callback
@@ -734,24 +829,29 @@ class Vasari extends App {
                   text: input.value
                 }
               };
+            },
 
-              const syntheticEvent = {
-                ...nativeEvent,
+            onKeyUp: nativeEvent => {
+              const { key = '' } = nativeEvent;
 
-                event: inputEvent
-              };
+              if (!key) return;
 
-              component.onClick.call(component, syntheticEvent);
+              this.keys[key] = false;
             },
 
             onKeyDown: nativeEvent => {
               const component = this.state.components[id];
 
-              // if (!component?.isFocused) return;
+              let { key = '' } = nativeEvent;
 
-              const { key = '' } = nativeEvent;
+              if (!key) return;
+
+              key = key.toLowerCase();
+
+              this.keys[key] = key;
 
               switch (key) {
+                case 'capslock':
                 case 'shift':
                 case 'alt':
                 case 'ctrl':
@@ -772,22 +872,37 @@ class Vasari extends App {
                   break;
 
                 case 'backspace':
-                  this.state.search = (
-                    this.state.search.substring(0, this.state.search.length - 1)
-                  );
+                  if (nativeEvent.ctrl) {
+                    this.state.search = '';
+                  } else {
+                    this.state.search = (
+                      this.state.search.substring(0, this.state.search.length - 1)
+                    );
+                  }
 
                   break;
 
                 default:
-                  this.state.search += key;
+                  if (nativeEvent.ctrl) return;
+
+                  if (nativeEvent.shift) {
+                    if (Object.keys(SHIFT_KEYS).includes(key)) {
+                      key = SHIFT_KEYS[key];
+                    } else {
+                      key = nativeEvent.capslock
+                        ? key.toLowerCase()
+                        : key.toUpperCase();
+                    }
+                  } else {
+                    key = nativeEvent.capslock
+                      ? key.toUpperCase()
+                      : key.toLowerCase();
+                  }
+
+                  if (PRINTABLE_KEYS.includes(key.toLowerCase())) {
+                    this.state.search += key;
+                  }
               }
-
-              const syntheticEvent = {
-                ...nativeEvent,
-
-                event: inputEvent,
-                value: this.state.search
-              };
 
               this.listeners[id].component =
               this.state.components[id] = {
@@ -808,7 +923,6 @@ class Vasari extends App {
                 }
               };
 
-              component.onKeyDown.call(component, syntheticEvent);
               this.render();
             }
           };

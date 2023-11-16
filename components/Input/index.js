@@ -74,23 +74,13 @@ class Input extends Rect {
     return `<Input #${this.id}>`;
   }
 
-  onKeyDown = event => {
-    this.value = event.value;
-
-    console.log('Input.onKeyDown', this.value);
-  };
-
-  onClick = () => {
-    this.isFocused = true;
-
-    console.log('Input.onClick', this.isFocused);
-  };
-
   /*******************************************
    * Method signatures
    *******************************************/
 
   onHover () {}
+  onClick () {}
+  onKeyDown () {}
 }
 
 export default Input;
