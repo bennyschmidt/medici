@@ -11,8 +11,8 @@ class Rect {
    *******************************************/
 
   constructor (
-    x,
-    y,
+    x = 0,
+    y = 0,
     width,
     height,
     attributes = {}
@@ -30,12 +30,13 @@ class Rect {
     return `<Rect #${this.id}>`;
   }
 
-  /*******************************************
-   * Method signatures
-   *******************************************/
+  onHover (event, component) {
+    // console.log('Rect.onHover', event, component.id);
+  }
 
-  onHover () {}
-  onClick () {}
+  onClick (event, component) {
+    // console.log('Rect.onClick', event, component.id);
+  }
 }
 
 export default Rect;

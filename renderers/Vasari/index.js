@@ -25,8 +25,7 @@ import {
 } from '../../components/index.js';
 
 const FPS = 30;
-
-const DEBOUNCE_INTERVAL = 10;
+const DEBOUNCE_INTERVAL = 20;
 
 const WINDOW_OPTIONS = {
   title: 'Medici',
@@ -39,101 +38,6 @@ const WINDOW_OPTIONS = {
 
 const DEFAULT_FONT_SIZE = 13;
 const DEFAULT_FONT = `normal 500 ${DEFAULT_FONT_SIZE}px sans-serif`;
-
-const PRINTABLE_KEYS = [
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '0',
-  'q',
-  'w',
-  'e',
-  'r',
-  't',
-  'y',
-  'u',
-  'i',
-  'o',
-  'p',
-  'a',
-  's',
-  'd',
-  'f',
-  'g',
-  'h',
-  'j',
-  'k',
-  'l',
-  'z',
-  'x',
-  'c',
-  'v',
-  'b',
-  'n',
-  'm',
-  '`',
-  '~',
-  '!',
-  '@',
-  '#',
-  '$',
-  '%',
-  '^',
-  '&',
-  '*',
-  '(',
-  ')',
-  '[',
-  '{',
-  ']',
-  '}',
-  '-',
-  '_',
-  '=',
-  '+',
-  ';',
-  ':',
-  '\'',
-  '"',
-  ',',
-  '<',
-  '.',
-  '>',
-  '/',
-  '?',
-  '\\',
-  '|'
-];
-
-const SHIFT_KEYS = {
-  '`': '~',
-  '1': '!',
-  '2': '@',
-  '3': '#',
-  '4': '$',
-  '5': '%',
-  '6': '^',
-  '7': '&',
-  '8': '*',
-  '9': '(',
-  '10': ')',
-  '[': '{',
-  ']': '}',
-  '-': '_',
-  '=': '+',
-  ';': ':',
-  '\'': '"',
-  ',': '<',
-  '.': '>',
-  '/': '?',
-  '\\': '|'
-};
 
 class Vasari extends App {
 
@@ -183,12 +87,9 @@ class Vasari extends App {
       }
     };
 
-    this.keys = {};
     this.events = {};
     this.listeners = {};
     this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
-
-    // Callback
 
     this.onLoad();
   }
@@ -494,11 +395,11 @@ class Vasari extends App {
                 const syntheticEvent = {
                   ...nativeEvent,
 
-                  event
+                  ...event
                 };
 
                 this.events[attributes.hover](syntheticEvent);
-                this.state.components[id].onHover(syntheticEvent);
+                this.state.components[id].onHover.call(this, syntheticEvent, this.state.components[id]);
               }
             };
           }
@@ -524,11 +425,11 @@ class Vasari extends App {
                 const syntheticEvent = {
                   ...nativeEvent,
 
-                  event
+                  ...event
                 };
 
                 this.events[attributes.click](syntheticEvent);
-                this.state.components[id].onClick(syntheticEvent);
+                this.state.components[id].onClick.call(this, syntheticEvent, this.state.components[id]);
               }
             };
           }
@@ -703,16 +604,12 @@ class Vasari extends App {
         break;
 
       case 'INPUT':
-        const component = this.state.components[id];
+        let component = this.state.components[id];
 
         if (!component || component.value !== this.state.search) {
           const {
             placeholder = 'Search apps & content...'
           } = component || {};
-
-          if (component?.value) {
-            this.state.search = component.value;
-          }
 
           const input = (
             new Input(
@@ -732,7 +629,11 @@ class Vasari extends App {
             )
           );
 
-          this.state.components[id] = input;
+          component = this.state.components[id] = input;
+
+          if (component?.value) {
+            this.state.search = component.value;
+          }
 
           this.state.canvas.context[`${type}Rect`](
             left,
@@ -813,125 +714,29 @@ class Vasari extends App {
 
             component,
 
-            onClick: nativeEvent => {
-              const component = this.state.components[id];
+            onClick: nativeEvent => (
+              component.onClick.call(
+                this,
+                {
+                  ...nativeEvent,
 
-              this.listeners[id].component =
-              this.state.components[id] = {
-                ...component,
+                  ...inputEvent
+                },
+                component
+              )
+            ),
 
-                // isFocused: true,
-                placeholder: '',
+            onKeyDown: nativeEvent => (
+              component.onKeyDown.call(
+                this,
+                {
+                  ...nativeEvent,
 
-                textComponent: {
-                  ...component.textComponent,
-
-                  text: input.value
-                }
-              };
-            },
-
-            onKeyUp: nativeEvent => {
-              const { key = '' } = nativeEvent;
-
-              if (!key) return;
-
-              this.keys[key] = false;
-            },
-
-            onKeyDown: nativeEvent => {
-              const component = this.state.components[id];
-
-              let { key = '' } = nativeEvent;
-
-              if (!key) return;
-
-              key = key.toLowerCase();
-
-              this.keys[key] = key;
-
-              switch (key) {
-                case 'return':
-                  if (this.onNavigate) {
-                    this.onNavigate(this.state.search);
-
-                    return;
-                  }
-
-                case 'capslock':
-                case 'shift':
-                case 'alt':
-                case 'ctrl':
-                case 'option':
-                case 'cmd':
-                case 'meta':
-                case 'fn':
-                  break;
-
-                case 'space':
-                  this.state.search += ' ';
-
-                  break;
-
-                case 'tab':
-                  this.state.search += '  ';
-
-                  break;
-
-                case 'backspace':
-                  if (nativeEvent.ctrl) {
-                    this.state.search = '';
-                  } else {
-                    this.state.search = (
-                      this.state.search.substring(0, this.state.search.length - 1)
-                    );
-                  }
-
-                  break;
-
-                default:
-                  if (nativeEvent.ctrl) return;
-
-                  if (nativeEvent.shift) {
-                    if (Object.keys(SHIFT_KEYS).includes(key)) {
-                      key = SHIFT_KEYS[key];
-                    } else {
-                      key = nativeEvent.capslock
-                        ? key.toLowerCase()
-                        : key.toUpperCase();
-                    }
-                  } else {
-                    key = nativeEvent.capslock
-                      ? key.toUpperCase()
-                      : key.toLowerCase();
-                  }
-
-                  if (PRINTABLE_KEYS.includes(key.toLowerCase())) {
-                    this.state.search += key;
-                  }
-              }
-
-              this.listeners[id].component =
-              this.state.components[id] = {
-                ...component,
-
-                textStyle: 'white',
-                textComponent: {
-                  ...component.textComponent,
-
-                  text: this.state.search,
-                  style: 'white',
-
-                  attributes: {
-                    ...component.textComponent.attributes,
-
-                    textStyle: 'white'
-                  }
-                }
-              };
-
-              this.render();
-            }
+                  ...inputEvent
+                },
+                component
+              )
+            ),
           };
         }
 
@@ -1053,7 +858,7 @@ class Vasari extends App {
     this.window.on('keyDown', onKeyDown);
 
     this.state.canvas = Canvas.createCanvas(this.state.width, this.state.height);
-    // this.interval = setInterval(this.render.bind(this), (1000 / FPS));
+
     this.render();
   };
 
@@ -1067,7 +872,6 @@ class Vasari extends App {
     this.window.off('mouseButtonDown', this.onClick.bind(this));
     this.window.off('mouseMove', this.onHover.bind(this));
     this.window.off('keyDown', this.onKeyDown.bind(this));
-    clearInterval(this.interval);
   };
 
   /**
@@ -1096,11 +900,12 @@ class Vasari extends App {
       isY = y > top && y < +top + +height;
     }
 
-    if (!listenerElement?.onKeyDown || !isX || !isY) return;
+    if (!listenerElement?.onHover || !isX || !isY) return;
 
     listenerElement.onHover.call(listenerElement, event);
 
     this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
+    this.render();
   };
 
   /**
@@ -1123,17 +928,23 @@ class Vasari extends App {
 
       if (!listenerElement?.onClick) continue;
 
-      const { left, top, width, height } = listenerElement;
+      const {
+        left,
+        top,
+        width,
+        height
+      } = listenerElement;
 
-      isX = x > left && x < +left + +width;
-      isY = y > top && y < +top + +height;
+      isX = x >= left && x <= (left + +width);
+      isY = y >= top && y <= (top + +height);
+
+      if (isX && isY) {
+        listenerElement.onClick(event);
+      }
     }
 
-    if (!listenerElement?.onKeyDown || !isX || !isY) return;
-
-    listenerElement.onClick.call(listenerElement, event);
-
     this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
+    this.render();
   };
 
   /**
@@ -1157,6 +968,7 @@ class Vasari extends App {
     listenerElement.onKeyDown.call(listenerElement, event);
 
     this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
+    this.render();
   };
 
   /*******************************************

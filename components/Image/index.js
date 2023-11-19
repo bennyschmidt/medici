@@ -93,12 +93,13 @@ class Image extends Media {
     return `<Image #${this.id}>`;
   }
 
-  /*******************************************
-   * Method signatures
-   *******************************************/
+  onHover (event, component) {
+    console.log('Image.onHover', event, component.id);
+  }
 
-  onHover () {}
-  onClick () {}
+  onClick (event, component) {
+    console.log('Image.onClick', event, component.id);
+  }
 }
 
 export default Image;

@@ -11,9 +11,9 @@ class Text {
    *******************************************/
 
   constructor (
-    text,
-    x,
-    y,
+    text = '',
+    x = 0,
+    y = 0,
     maxWidth,
     attributes = {}
   ) {

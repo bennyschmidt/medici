@@ -41,7 +41,9 @@ class Medici extends Vasari {
    * Methods
    *******************************************/
 
-  onNavigate = async path => {
+  onNavigate = async (path = '') => {
+    if (!path) return;
+
     const rootElement = (
       this.state.elements.root ||
       Object.values(this.state.elements).find(({ rawTagName }) => (
@@ -50,9 +52,9 @@ class Medici extends Vasari {
     );
 
     const [
-      namespace,
-      contentType,
-      fileName
+      namespace = '',
+      contentType = '',
+      fileName = ''
     ] = path.toLowerCase().split(':');
 
     const type = contentType.toUpperCase();
@@ -144,7 +146,7 @@ class Medici extends Vasari {
       case 'IMAGE':
         this.value = `
           <Medici>
-            <Image cover path="${file}" x={0} y={40} width={1024} height={544} />
+            <Image path="${file}" x={0} y={40} width={1024} height={544} />
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
@@ -155,7 +157,7 @@ class Medici extends Vasari {
         this.value = `
           <Medici>
             <Text fill style="white" text="Audio not yet supported." x={10} y={60} maxWidth={1024} />
-            <Audio ath="${file}" />
+            <Audio path="${file}" />
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
@@ -166,7 +168,7 @@ class Medici extends Vasari {
         this.value = `
           <Medici>
             <Text fill style="white" text="Video not yet supported." x={10} y={60} maxWidth={1024} />
-            <Video ath="${file}" />
+            <Video path="${file}" />
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
@@ -207,6 +209,8 @@ class Medici extends Vasari {
 
         break;
     }
+
+    this.state.search = path;
 
     this.render();
   };
