@@ -25,7 +25,7 @@ import {
 } from '../../components/index.js';
 
 const FPS = 30;
-const DEBOUNCE_INTERVAL = 20;
+const DEBOUNCE_INTERVAL = 30;
 
 const WINDOW_OPTIONS = {
   title: 'Medici',
