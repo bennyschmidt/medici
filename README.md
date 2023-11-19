@@ -75,22 +75,13 @@ An entry in `peers.json` is as simple as:
 
 When a user navigates to `@youralias` in Medici, the browser knows to look at `https://your.domain/somefolder` for the following sub-directories:
 
-
-`/`
-
-    `/app`
-  
-    `/audio`
-  
-    `/data`
-  
-    `/image`
-  
-    `/page`
-  
-    `/text`
-  
-    `/video`
+    /app
+    /audio 
+    /data 
+    /image
+    /page
+    /text
+    /video
 
 These directories correspond to native content types in Medici:
 
