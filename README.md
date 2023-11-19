@@ -63,8 +63,7 @@ Navigate to files in the peer network:
 
 ##### Peers
 
-Claim your `@alias` by adding it to [`peers.json`](https://github.com/bennyschmidt/medici/blob/master/peers.json) (via a [Pull Request](https://github.com/bennyschmidt/medici/pulls). 
-When approved, your content is public in the network.
+Claim your `@alias` by adding it to [`peers.json`](https://github.com/bennyschmidt/medici/blob/master/peers.json) via a [Pull Request](https://github.com/bennyschmidt/medici/pulls). When approved, your content will be public in the network.
 
 An entry in `peers.json` is as simple as:
 
