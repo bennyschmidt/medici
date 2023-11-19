@@ -18,7 +18,8 @@ class Link extends Rect {
     width,
     height,
     attributes = {},
-    source = ''
+    source = '',
+    text = ''
   ) {
     super(
       x,
@@ -36,6 +37,7 @@ class Link extends Rect {
     this.height = height;
     this.attributes = attributes;
     this.source = source;
+    this.text = text;
     this.isFocused = false;
 
     const padding = (height / 2) + 4;
@@ -48,7 +50,7 @@ class Link extends Rect {
     };
 
     this.textComponent = new Text(
-      placeholder,
+      text || source,
       textBox.left,
       textBox.top,
       textBox.width,
@@ -73,18 +75,18 @@ class Link extends Rect {
     return this.source;
   }
 
-  onClick (event) {
-    const { childNodes } = event?.element || {};
+  onHover (_, component) {
+    this.state.hoverTarget = component?.id;
+  }
 
-    const textNode = childNodes.find(({ rawTagName }) => (
-      rawTagName === 'Text'
-    ));
+  onClick (event) {
+    if (!event?.element) return;
 
     const {
-      text = ''
-    } = this.getElementAttributes(textNode);
+      source = ''
+    } = this.getElementAttributes(event.element);
 
-    this.onNavigate(text);
+    this.onNavigate(source);
   }
 }
 

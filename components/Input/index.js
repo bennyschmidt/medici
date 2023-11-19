@@ -185,6 +185,8 @@ class Input extends Rect {
         text: component.value
       }
     };
+
+    this.state.focusTarget = component?.id;
   }
 
   onKeyDown (event, component) {

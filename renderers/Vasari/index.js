@@ -21,6 +21,7 @@ import {
   Data,
   Image,
   Input,
+  Link,
   View
 } from '../../components/index.js';
 
@@ -743,118 +744,124 @@ class Vasari extends App {
         break;
 
       case 'LINK':
-        if (!component || component.value !== this.state.search) {
-          const link = (
-            new Link(
-              left,
-              top,
-              width,
-              height,
-              {
-                id,
-                left: `${left}px`,
-                top: `${top}px`,
-                width: `${width}px`,
-                height: `${height}px`,
-                textStyle: attributes.textStyle
-              },
-              attributes.source
-            )
-          );
-
-          component = this.state.components[id] = link;
-
-          this.state.canvas.context[`${type}Rect`](
+        const link = (
+          new Link(
             left,
             top,
             width,
-            height
-          );
-
-          const { textComponent } = link;
-
-          this.state.components[textComponent.id] = textComponent;
-          this.state.canvas.context.fillStyle = textComponent.attributes.textStyle;
-
-          attributes.left = textComponent.left;
-          attributes.top = textComponent.top;
-          attributes.width = textComponent.width;
-          attributes.height = textComponent.height;
-
-          this.state.canvas.context.fillText(
+            height,
+            {
+              id,
+              left: `${left}px`,
+              top: `${top}px`,
+              width: `${width}px`,
+              height: `${height}px`,
+              textStyle: attributes.textStyle
+            },
             attributes.source,
-            textComponent.x,
-            textComponent.y,
-            textComponent.width
-          );
+            attributes.text
+          )
+        );
 
-          const clickEvent = {
-            id,
-            element: {
-              ...element,
-              ...attributes,
+        component = this.state.components[id] = link;
 
-              tagName,
-              localName: tagName.toLowerCase(),
-              appearance: {
-                [type]: true,
-                style,
-                left,
-                top,
-                width,
-                maxWidth,
-                height,
-                shadowColor,
-                shadowBlur,
-                lineJoin,
-                lineWidth
-              }
-            }
-          };
+        this.state.canvas.context[`${type}Rect`](
+          left,
+          top,
+          width,
+          height
+        );
 
-          if (!this.listeners[id]) {
-            this.listeners[id] = {
+        const { textComponent } = link;
+
+        this.state.components[textComponent.id] = textComponent;
+
+        attributes.left = textComponent.left;
+        attributes.top = textComponent.top;
+        attributes.width = textComponent.width;
+        attributes.height = textComponent.height;
+
+        textComponent.textStyle = (
+          this.state.hoverTarget === id
+            ? 'linear-gradient(purple, red, 150, 50, 0, 0)'
+            : (textComponent.attributes.textStyle || 'white')
+        );
+
+        this.state.canvas.context.fillStyle = textComponent.textStyle;
+
+        this.state.canvas.context.fillText(
+          attributes.text || attributes.source,
+          textComponent.x,
+          textComponent.y,
+          textComponent.width
+        );
+
+        const pointerEvent = {
+          id,
+          element: {
+            ...element,
+            ...attributes,
+
+            tagName,
+            localName: tagName.toLowerCase(),
+            appearance: {
+              [type]: true,
+              style,
               left,
               top,
               width,
+              maxWidth,
               height,
-              onClick: null,
-              onKeyDown: null,
-              component: this.state.components[id],
-              element: this.state.elements[id]
-            };
+              shadowColor,
+              shadowBlur,
+              lineJoin,
+              lineWidth
+            }
           }
+        };
 
+        if (!this.listeners[id]) {
           this.listeners[id] = {
-            ...this.listeners[id],
-
-            component,
-
-            onClick: nativeEvent => (
-              component.onClick.call(
-                this,
-                {
-                  ...nativeEvent,
-
-                  ...clickEvent
-                },
-                component
-              )
-            ),
-
-            onKeyDown: nativeEvent => (
-              component.onKeyDown.call(
-                this,
-                {
-                  ...nativeEvent,
-
-                  ...clickEvent
-                },
-                component
-              )
-            ),
+            left,
+            top,
+            width,
+            height,
+            onHover: null,
+            onClick: null,
+            component: this.state.components[id],
+            element: this.state.elements[id]
           };
         }
+
+        this.listeners[id] = {
+          ...this.listeners[id],
+
+          component,
+
+          onHover: nativeEvent => (
+            component.onHover.call(
+              this,
+              {
+                ...nativeEvent,
+
+                ...pointerEvent
+              },
+              component
+            )
+          ),
+
+          onClick: nativeEvent => (
+            component.onClick.call(
+              this,
+              {
+                ...nativeEvent,
+
+                ...pointerEvent
+              },
+              component
+            )
+          ),
+        };
 
         break;
 
@@ -998,6 +1005,8 @@ class Vasari extends App {
   onHover = event => {
     if (this._nextEvent > Date.now()) return;
 
+    this.state.hoverTarget = null;
+
     const { x, y } = event;
 
     let isX = false;
@@ -1010,15 +1019,20 @@ class Vasari extends App {
 
       if (!listenerElement?.onHover) continue;
 
-      const { left, top, width, height } = listenerElement;
+      const {
+        left,
+        top,
+        width,
+        height
+      } = listenerElement;
 
-      isX = x > left && x < +left + +width;
-      isY = y > top && y < +top + +height;
+      isX = x >= left && x <= (left + +width);
+      isY = y >= top && y <= (top + +height);
+
+      if (isX && isY) {
+        listenerElement.onHover(event);
+      }
     }
-
-    if (!listenerElement?.onHover || !isX || !isY) return;
-
-    listenerElement.onHover.call(listenerElement, event);
 
     this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
     this.render();
