@@ -5,6 +5,7 @@ import Document from './Document/index.js';
 import Media from './Media/index.js';
 import Image from './Image/index.js';
 import Input from './Input/index.js';
+import Link from './Link/index.js';
 import Audio from './Audio/index.js';
 import Video from './Video/index.js';
 import View from './View/index.js';
@@ -19,6 +20,7 @@ export {
   Media,
   Image,
   Input,
+  Link,
   Audio,
   Video,
   View,

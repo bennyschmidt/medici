@@ -342,6 +342,8 @@ class Vasari extends App {
       id = `${method.toLowerCase()}-${randomUUID().slice(0, 8)}`
     } = attributes;
 
+    let component = this.state.components[id];
+
     switch (tagName) {
       case 'RECT':
       case 'IMAGE':
@@ -604,8 +606,6 @@ class Vasari extends App {
         break;
 
       case 'INPUT':
-        let component = this.state.components[id];
-
         if (!component || component.value !== this.state.search) {
           const {
             placeholder = 'Search apps & content...'
@@ -733,6 +733,122 @@ class Vasari extends App {
                   ...nativeEvent,
 
                   ...inputEvent
+                },
+                component
+              )
+            ),
+          };
+        }
+
+        break;
+
+      case 'LINK':
+        if (!component || component.value !== this.state.search) {
+          const link = (
+            new Link(
+              left,
+              top,
+              width,
+              height,
+              {
+                id,
+                left: `${left}px`,
+                top: `${top}px`,
+                width: `${width}px`,
+                height: `${height}px`,
+                textStyle: attributes.textStyle
+              },
+              attributes.source
+            )
+          );
+
+          component = this.state.components[id] = link;
+
+          this.state.canvas.context[`${type}Rect`](
+            left,
+            top,
+            width,
+            height
+          );
+
+          const { textComponent } = link;
+
+          this.state.components[textComponent.id] = textComponent;
+          this.state.canvas.context.fillStyle = textComponent.attributes.textStyle;
+
+          attributes.left = textComponent.left;
+          attributes.top = textComponent.top;
+          attributes.width = textComponent.width;
+          attributes.height = textComponent.height;
+
+          this.state.canvas.context.fillText(
+            attributes.source,
+            textComponent.x,
+            textComponent.y,
+            textComponent.width
+          );
+
+          const clickEvent = {
+            id,
+            element: {
+              ...element,
+              ...attributes,
+
+              tagName,
+              localName: tagName.toLowerCase(),
+              appearance: {
+                [type]: true,
+                style,
+                left,
+                top,
+                width,
+                maxWidth,
+                height,
+                shadowColor,
+                shadowBlur,
+                lineJoin,
+                lineWidth
+              }
+            }
+          };
+
+          if (!this.listeners[id]) {
+            this.listeners[id] = {
+              left,
+              top,
+              width,
+              height,
+              onClick: null,
+              onKeyDown: null,
+              component: this.state.components[id],
+              element: this.state.elements[id]
+            };
+          }
+
+          this.listeners[id] = {
+            ...this.listeners[id],
+
+            component,
+
+            onClick: nativeEvent => (
+              component.onClick.call(
+                this,
+                {
+                  ...nativeEvent,
+
+                  ...clickEvent
+                },
+                component
+              )
+            ),
+
+            onKeyDown: nativeEvent => (
+              component.onKeyDown.call(
+                this,
+                {
+                  ...nativeEvent,
+
+                  ...clickEvent
                 },
                 component
               )
