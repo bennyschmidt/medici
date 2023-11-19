@@ -32,7 +32,7 @@ class Medici extends Vasari {
 
   constructor () {
     super(
-      `${__dirname}/renderers/Medici/home.jsx`,
+      `${__dirname}/renderers/Medici/browser.jsx`,
       'Medici'
     );
   }
