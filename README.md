@@ -61,7 +61,7 @@ Navigate to files in the peer network:
 
 ![image](https://github.com/bennyschmidt/medici/assets/45407493/409aed09-0a2f-404d-8366-fb8202b8088f)
 
-##### Peers
+##### Peer-to-peer
 
 Claim your `@alias` by adding it to [`peers.json`](https://github.com/bennyschmidt/medici/blob/master/peers.json) via a [Pull Request](https://github.com/bennyschmidt/medici/pulls). When approved, your content will be public in the network.
 
@@ -78,19 +78,19 @@ When a user navigates to `@youralias` in Medici, the browser knows to look at `h
 
 `/`
 
-  `/app`
+    `/app`
   
-  `/audio`
+    `/audio`
   
-  `/data`
+    `/data`
   
-  `/image`
+    `/image`
   
-  `/page`
+    `/page`
   
-  `/text`
+    `/text`
   
-  `/video`
+    `/video`
 
 These directories correspond to native content types in Medici:
 
@@ -104,7 +104,14 @@ These directories correspond to native content types in Medici:
 
 `Video` - A video file
 
-`Page` - A static JSX page
+`Page` - A static JSX page that renders to `Canvas` (via [`node-canvas`](https://www.npmjs.com/package/canvas))
 
-`App` - An interactive JSX page with events & scripting
+`App` - A `Page` with events & scripting
 
+##### JSX-to-Canvas Renderer
+
+- [Vasari](https://github.com/bennyschmidt/medici/blob/master/renderers/Vasari/index.js): Built using [`node-sdl`](https://github.com/kmamal/node-sdl)
+- Cross-platform: SDL is based on C and is naturally cross-platform.
+- No relation to conventional browsers: Not based on Chromium or Blink, WebKit, or any mainstream rendering engine.
+- JSX is native code in Medici and transpiles to `Canvas` (not HTML/CSS rendering). 
+- Supports native 2D and 3D drawing via `Canvas`, `WebGL`, and/or `WebGPU`.
