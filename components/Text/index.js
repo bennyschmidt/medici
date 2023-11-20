@@ -18,7 +18,7 @@ class Text {
     attributes = {}
   ) {
     this.type = 'text';
-    this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
+    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.text = text;
     this.x = x;
     this.y = y;

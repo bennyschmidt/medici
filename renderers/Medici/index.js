@@ -44,13 +44,6 @@ class Medici extends Vasari {
   onNavigate = async (path = '') => {
     if (!path) return;
 
-    const rootElement = (
-      this.state.elements.root ||
-      Object.values(this.state.elements).find(({ rawTagName }) => (
-        rawTagName === 'Medici'
-      ))
-    );
-
     const [
       namespace = '',
       contentType = '',
@@ -82,7 +75,7 @@ class Medici extends Vasari {
       notifier.notify(errorMessage);
     }
 
-    rootElement.innerHTML = file.toString();
+    const innerJSX = file.toString();
 
     if (isMedia) {
       const base64String = Buffer.from(file).toString('base64');
@@ -120,7 +113,9 @@ class Medici extends Vasari {
       case 'TEXT':
         this.value = `
           <Medici>
-            <Text fill style="white" text="${file}" x={10} y={60} maxWidth={1024} />
+            <View id="root" x={0} y={0} width={1024} height={544}>
+              <Text fill style="white" text="${file}" x={10} y={60} maxWidth={1024} />
+            </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
@@ -136,7 +131,9 @@ class Medici extends Vasari {
 
         this.value = `
           <Medici>
-            <Data style="white" list="${list}" x={10} y={60} maxWidth={1024} />
+            <View id="root" x={0} y={0} width={1024} height={544}>
+              <Data style="white" list="${list}" x={10} y={60} maxWidth={1024} />
+            </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
@@ -146,7 +143,9 @@ class Medici extends Vasari {
       case 'IMAGE':
         this.value = `
           <Medici>
-            <Image path="${file}" x={0} y={40} width={1024} height={544} />
+            <View id="root" x={0} y={0} width={1024} height={544}>
+              <Image path="${file}" x={0} y={0} width={1024} height={544} />
+            </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
@@ -156,8 +155,10 @@ class Medici extends Vasari {
       case 'AUDIO':
         this.value = `
           <Medici>
-            <Text fill style="white" text="Audio not yet supported." x={10} y={60} maxWidth={1024} />
-            <Audio path="${file}" />
+            <View id="root" x={0} y={0} width={1024} height={544}>
+              <Text fill style="white" text="Audio not yet supported." x={10} y={60} maxWidth={1024} />
+              <Audio path="${file}" />
+            </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
@@ -167,8 +168,10 @@ class Medici extends Vasari {
       case 'VIDEO':
         this.value = `
           <Medici>
-            <Text fill style="white" text="Video not yet supported." x={10} y={60} maxWidth={1024} />
-            <Video path="${file}" />
+            <View id="root" x={0} y={0} width={1024} height={544}>
+              <Text fill style="white" text="Video not yet supported." x={10} y={56} maxWidth={1024} />
+              <Video path="${file}" />
+            </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
@@ -188,9 +191,9 @@ class Medici extends Vasari {
 
         this.value = `
           <Medici>
-            <Rect fill style="#111" x={0} y={40} width={1024} height={544}>
-              ${rootElement.innerHTML}
-            </Rect>
+            <View id="root" x={0} y={0} width={1024} height={544}>
+              ${innerJSX}
+            </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;
@@ -200,9 +203,9 @@ class Medici extends Vasari {
       case 'APP':
         this.value = `
           <Medici>
-            <Rect fill style="#111" x={0} y={40} width={1024} height={544}>
-              ${rootElement.innerHTML}
-            </Rect>
+            <View id="root" x={0} y={0} width={1024} height={544}>
+              ${innerJSX}
+            </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
           </Medici>
         `;

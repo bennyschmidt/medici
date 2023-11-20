@@ -17,9 +17,9 @@ class Link extends Rect {
     y = 0,
     width,
     height,
-    attributes = {},
     source = '',
-    text = ''
+    text = '',
+    attributes = {}
   ) {
     super(
       x,

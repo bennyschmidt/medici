@@ -30,7 +30,7 @@ class Audio extends Media {
     super(path, onLoad);
 
     this.type = 'audio';
-    this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
+    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.volume = volume;
     this.time = start;
     this.tags = [...new Set(tags)];

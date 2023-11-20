@@ -112,9 +112,9 @@ class Input extends Rect {
     y = 0,
     width,
     height,
-    attributes = {},
     placeholder = 'Type something...',
-    value = ''
+    value = '',
+    attributes = {}
   ) {
     super(
       x,

@@ -166,9 +166,11 @@ class Vasari extends App {
    **/
 
   parseJSX = () => {
-    const { firstChild: rootElement } = (
-      HTMLParser.parse(this.value.replace(/\n/g, '').trim())
+    const html = HTMLParser.parse(
+      this.value.replace(/\n/g, '').trim()
     );
+
+    const { firstChild: rootElement } = html;
 
     return rootElement;
   };
@@ -338,10 +340,8 @@ class Vasari extends App {
     delete attributes.y;
 
     const tagName = method.toUpperCase();
-
-    const {
-      id = `${method.toLowerCase()}-${randomUUID().slice(0, 8)}`
-    } = attributes;
+    const generatedId = `${method.toLowerCase()}-${randomUUID().slice(0, 8)}`;
+    const { id = generatedId } = attributes;
 
     let component = this.state.components[id];
 
@@ -453,6 +453,8 @@ class Vasari extends App {
           height,
 
           {
+            id,
+
             ...attributes,
 
             left: `${left}px`,
@@ -480,6 +482,8 @@ class Vasari extends App {
             maxWidth,
 
             {
+              id,
+
               ...attributes,
 
               x: `${left}px`,
@@ -505,6 +509,8 @@ class Vasari extends App {
             attributes.list,
 
             {
+              id,
+
               ...attributes,
 
               x: `${left}px`,
@@ -536,6 +542,7 @@ class Vasari extends App {
             height,
 
             attributes: {
+              id,
               left: `${left}px`,
               top: `${top}px`,
               width: `${width}px`,
@@ -585,6 +592,7 @@ class Vasari extends App {
             top,
             width,
             height,
+
             {
               id,
               left: `${left}px`,
@@ -608,9 +616,13 @@ class Vasari extends App {
 
       case 'INPUT':
         if (!component || component.value !== this.state.search) {
-          const {
-            placeholder = 'Search apps & content...'
-          } = component || {};
+          const placeholder = (
+            component?.placeholder || 'Search apps & content...'
+          );
+
+          const value = (
+            component?.value || ''
+          );
 
           const input = (
             new Input(
@@ -618,6 +630,9 @@ class Vasari extends App {
               top,
               width,
               height,
+              placeholder,
+              value,
+
               {
                 id,
                 left: `${left}px`,
@@ -625,8 +640,7 @@ class Vasari extends App {
                 width: `${width}px`,
                 height: `${height}px`,
                 textStyle: attributes.textStyle
-              },
-              placeholder
+              }
             )
           );
 
@@ -750,6 +764,9 @@ class Vasari extends App {
             top,
             width,
             height,
+            attributes.source,
+            attributes.text,
+
             {
               id,
               left: `${left}px`,
@@ -757,9 +774,7 @@ class Vasari extends App {
               width: `${width}px`,
               height: `${height}px`,
               textStyle: attributes.textStyle
-            },
-            attributes.source,
-            attributes.text
+            }
           )
         );
 

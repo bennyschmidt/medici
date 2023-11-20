@@ -22,7 +22,7 @@ class Document {
 
   constructor (path, attributes = {}) {
     this.type = 'document';
-    this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
+    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.source = null;
     this.sourceType = null;
     this.encoding = null;
@@ -67,7 +67,6 @@ class Document {
   }
 
   onScroll (event) {
-
     console.log('scroll', event);
   }
 

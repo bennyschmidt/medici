@@ -20,7 +20,7 @@ class App extends Page {
     super(path);
 
     this.type = 'app';
-    this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
+    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.attributes = attributes;
 
     for (const member of Object.keys(variables)) {

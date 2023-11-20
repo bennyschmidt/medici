@@ -12,7 +12,7 @@ class Data {
 
   constructor (list, attributes = {}) {
     this.type = 'data';
-    this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
+    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.value = {};
     this.attributes = attributes;
 

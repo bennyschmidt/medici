@@ -25,7 +25,7 @@ class Page extends Document {
     super(path);
 
     this.type = 'page';
-    this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
+    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.title = title;
     this.value = null;
     this.attributes = attributes;
