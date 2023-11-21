@@ -3,11 +3,8 @@ const DEBOUNCE_INTERVAL = 30;
 
 const WINDOW_OPTIONS = {
   title: 'Medici',
-  accelerated: true,
-  popupMenu: false,
   width: 1024,
-  height: 576,
-  resizable: false
+  height: 576
 };
 
 const DEFAULT_FONT_SIZE = 13;

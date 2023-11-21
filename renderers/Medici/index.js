@@ -116,9 +116,7 @@ class Medici extends Vasari {
             <View id="root" x={0} y={0} width={1024} height={544}>
               <Text fill style="white" text="${file}" x={10} y={60} maxWidth={1024} />
             </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
-            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
-            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
           </Medici>
         `;
 
@@ -136,9 +134,7 @@ class Medici extends Vasari {
             <View id="root" x={0} y={0} width={1024} height={544}>
               <Data style="white" list="${list}" x={10} y={60} maxWidth={1024} />
             </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
-            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
-            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
           </Medici>
         `;
 
@@ -150,9 +146,7 @@ class Medici extends Vasari {
             <View id="root" x={0} y={40} width={1024} height={544}>
               <Image path="${file}" x={0} y={0} width={1024} height={544} />
             </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
-            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
-            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
           </Medici>
         `;
 
@@ -165,9 +159,7 @@ class Medici extends Vasari {
               <Text fill style="white" text="Audio not yet supported." x={10} y={60} maxWidth={1024} />
               <Audio path="${file}" />
             </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
-            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
-            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
           </Medici>
         `;
 
@@ -180,9 +172,7 @@ class Medici extends Vasari {
               <Text fill style="white" text="Video not yet supported." x={10} y={60} maxWidth={1024} />
               <Video path="${file}" />
             </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
-            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
-            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
           </Medici>
         `;
 
@@ -208,9 +198,7 @@ class Medici extends Vasari {
             <View id="root" x={0} y={40} width={1024} height={544}>
               ${innerJSX}
             </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
-            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
-            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
           </Medici>
         `;
 
@@ -222,9 +210,7 @@ class Medici extends Vasari {
             <View id="root" x={0} y={40} width={1024} height={544}>
               ${innerJSX}
             </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
-            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
-            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
+            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
           </Medici>
         `;
 

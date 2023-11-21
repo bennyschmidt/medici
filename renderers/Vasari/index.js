@@ -245,6 +245,10 @@ class Vasari extends App {
       attributes.lineWidth || 1
     );
 
+    const fontSize = (
+      attributes?.size || DEFAULT_FONT_SIZE
+    );
+
     return {
       type,
       [type]: true,
@@ -258,7 +262,8 @@ class Vasari extends App {
       shadowColor,
       shadowBlur,
       lineJoin,
-      lineWidth
+      lineWidth,
+      fontSize
     };
   };
 
@@ -287,7 +292,8 @@ class Vasari extends App {
       shadowColor,
       shadowBlur,
       lineJoin,
-      lineWidth
+      lineWidth,
+      fontSize
     } = this.parseAppearanceAttributes(element, attributes);
 
     const methodName = `${type}${method}`;
@@ -460,13 +466,13 @@ class Vasari extends App {
             x: left,
             y: top,
             maxWidth,
-            size: attributes?.size || DEFAULT_FONT_SIZE
+            size: fontSize
           })
         );
 
-        if (attributes?.size) {
+        if (fontSize) {
           this.state.canvas.context.font = (
-            DEFAULT_FONT.replace(`${DEFAULT_FONT_SIZE}px`, `${attributes.size}px`)
+            DEFAULT_FONT.replace(`${DEFAULT_FONT_SIZE}px`, `${fontSize}px`)
           );
         }
 
@@ -597,11 +603,42 @@ class Vasari extends App {
             this.state.search = component.value;
           }
 
-          this.state.canvas.context[`${type}Rect`](
+          const inputRectGradient = this.state.canvas.context.createLinearGradient(
+            50,
+            50,
+            0,
+            0
+          );
+
+          inputRectGradient.addColorStop(0, '#80008020');
+          inputRectGradient.addColorStop(1, 'transparent');
+
+          this.state.canvas.context.fillStyle = inputRectGradient;
+
+          this.state.canvas.context.fillRect(
             left,
             top,
-            width,
-            height
+            width || 1024,
+            height || 36
+          );
+
+          const inputBorderGradient = this.state.canvas.context.createLinearGradient(
+            512,
+            50,
+            0,
+            0
+          );
+
+          inputBorderGradient.addColorStop(0, '#80008020');
+          inputBorderGradient.addColorStop(1, '#111');
+
+          this.state.canvas.context.fillStyle = inputBorderGradient;
+
+          this.state.canvas.context.fillRect(
+            left,
+            top + 36,
+            width || 1024,
+            1
           );
 
           const { textComponent } = input;
@@ -740,7 +777,7 @@ class Vasari extends App {
 
         textComponent.attributes.style = (
           this.state.hoverTarget === id
-            ? 'purple'
+            ? 'indigo'
             : textComponent.attributes.style
         );
 
