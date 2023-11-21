@@ -35,7 +35,6 @@ class Link extends Rect {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.attributes = attributes;
     this.source = source;
     this.text = text;
     this.isFocused = false;
@@ -70,6 +69,11 @@ class Link extends Rect {
       }
     );
   }
+
+  /**
+   * toString
+   * A string representation of the component
+   **/
 
   toString () {
     return this.source;

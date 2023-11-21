@@ -1,10 +1,10 @@
-import { randomUUID } from 'crypto';
+import { Component } from '../index.js';
 
 /**
  * Text
  */
 
-class Text {
+class Text extends Component {
 
   /*******************************************
    * Init
@@ -17,14 +17,18 @@ class Text {
     maxWidth,
     attributes = {}
   ) {
-    this.type = 'text';
-    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
+    super('text', attributes);
+
     this.text = text;
     this.x = x;
     this.y = y;
     this.maxWidth = maxWidth;
-    this.attributes = attributes;
   }
+
+  /**
+   * toString
+   * A string representation of the component
+   **/
 
   toString () {
     return this.text;

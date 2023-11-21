@@ -63,9 +63,9 @@ class Image extends Media {
       tags: [],
       attributes: {}
     },
-    onReady = source => this.onReady(source)
+    didLoad = () => null
   ) {
-    super(path, onReady);
+    super(path);
 
     this.type = 'image';
     this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
@@ -74,7 +74,14 @@ class Image extends Media {
     this.width = width;
     this.height = height;
     this.tags = [...new Set(tags)];
-    this.attributes = attributes;
+
+    this.attributes = {
+      ...this.attributes,
+
+      ...attributes
+    };
+
+    didLoad();
   }
 
   get pixelWidth () {
@@ -83,14 +90,6 @@ class Image extends Media {
 
   get pixelHeight () {
     return `${this.height}px`;
-  }
-
-  /*******************************************
-   * Instance methods
-   *******************************************/
-
-  toString () {
-    return `<Image #${this.id}>`;
   }
 
   onHover (event, component) {

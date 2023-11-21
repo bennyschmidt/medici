@@ -130,7 +130,6 @@ class Input extends Rect {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.attributes = attributes;
     this.placeholder = placeholder;
     this.value = value;
     this.isFocused = false;
@@ -165,6 +164,11 @@ class Input extends Rect {
       }
     );
   }
+
+  /**
+   * toString
+   * A string representation of the component
+   **/
 
   toString () {
     return `<Input #${this.id}>`;

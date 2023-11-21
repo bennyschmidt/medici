@@ -28,12 +28,12 @@ class Page extends Document {
     this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.title = title;
     this.value = null;
-    this.attributes = attributes;
   }
 
-  /*******************************************
-   * Instance methods
-   *******************************************/
+  /**
+   * onLoad
+   * Handle page load
+   **/
 
   onLoad (source) {
     const jsx = source?.toString();
@@ -46,12 +46,6 @@ class Page extends Document {
 
     this.encoding = type[0];
     this.format = type[1];
-
-    this.onReady();
-  }
-
-  toString () {
-    return `<Page #${this.id}>`;
   }
 }
 

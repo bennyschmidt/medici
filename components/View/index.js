@@ -27,20 +27,18 @@ class View extends Rect {
       attributes
     );
 
-    this.type = 'input';
+    this.type = 'view';
     this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
   }
+
+  /**
+   * toString
+   * A string representation of the component
+   **/
 
   toString () {
     return `<View #${this.id}>`;
   }
-
-  /*******************************************
-   * Method signatures
-   *******************************************/
-
-  onHover () {}
-  onClick () {}
 }
 
 export default View;

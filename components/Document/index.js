@@ -1,13 +1,12 @@
 import fs from 'fs/promises';
-import { randomUUID } from 'crypto';
 
-import { Data } from '../index.js';
+import { Component, Data } from '../index.js';
 
 /**
  * Document
  */
 
-class Document {
+class Document extends Component {
   static async load (filePath, onLoad) {
     const response = await fs.readFile(filePath);
 
@@ -21,15 +20,31 @@ class Document {
    *******************************************/
 
   constructor (path, attributes = {}) {
-    this.type = 'document';
-    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
+    super('document', attributes);
+
     this.source = null;
     this.sourceType = null;
     this.encoding = null;
     this.format = null;
-    this.attributes = attributes;
 
-    Document.load(path, this.onLoad.bind(this));
+    Document.load(path, this.open.bind(this));
+  }
+
+  /**
+   * toString
+   * A string representation of the component
+   **/
+
+  toString () {
+    return this.data?.toString?.() || '';
+  }
+
+  open (source) {
+    this.onLoad(source);
+  }
+
+  close () {
+    this.onUnload();
   }
 
   onLoad (source) {
@@ -58,23 +73,11 @@ class Document {
 
     this.encoding = sourceType.slice(sourceType.indexOf(';') + 1, source.indexOf(','));
     this.format = sourceType.slice(sourceType.indexOf('/') + 1, sourceType.indexOf(';'));
-
-    this.onReady();
-  }
-
-  toString () {
-    return this.data?.toString?.() || '';
   }
 
   onScroll (event) {
     console.log('scroll', event);
   }
-
-  /*******************************************
-   * Method signatures
-   *******************************************/
-
-  onReady () {}
 }
 
 export default Document;

@@ -117,6 +117,8 @@ class Medici extends Vasari {
               <Text fill style="white" text="${file}" x={10} y={60} maxWidth={1024} />
             </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
+            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
+            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
           </Medici>
         `;
 
@@ -135,6 +137,8 @@ class Medici extends Vasari {
               <Data style="white" list="${list}" x={10} y={60} maxWidth={1024} />
             </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
+            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
+            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
           </Medici>
         `;
 
@@ -143,10 +147,12 @@ class Medici extends Vasari {
       case 'IMAGE':
         this.value = `
           <Medici>
-            <View id="root" x={0} y={0} width={1024} height={544}>
+            <View id="root" x={0} y={40} width={1024} height={544}>
               <Image path="${file}" x={0} y={0} width={1024} height={544} />
             </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
+            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
+            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
           </Medici>
         `;
 
@@ -155,11 +161,13 @@ class Medici extends Vasari {
       case 'AUDIO':
         this.value = `
           <Medici>
-            <View id="root" x={0} y={0} width={1024} height={544}>
+            <View id="root" x={0} y={40} width={1024} height={544}>
               <Text fill style="white" text="Audio not yet supported." x={10} y={60} maxWidth={1024} />
               <Audio path="${file}" />
             </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
+            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
+            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
           </Medici>
         `;
 
@@ -169,32 +177,40 @@ class Medici extends Vasari {
         this.value = `
           <Medici>
             <View id="root" x={0} y={0} width={1024} height={544}>
-              <Text fill style="white" text="Video not yet supported." x={10} y={56} maxWidth={1024} />
+              <Text fill style="white" text="Video not yet supported." x={10} y={60} maxWidth={1024} />
               <Video path="${file}" />
             </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
+            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
+            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
           </Medici>
         `;
 
         break;
 
       case 'PAGE':
-        const unsupportedTags = [
-          ...rootElement.getElementsByTagName('Declare'),
+        const rootElement = this.parseJSX();
 
-          ...rootElement.getElementsByTagName('Event')
-        ];
+        if (rootElement.childNodes) {
+          const unsupportedTags = [
+            ...rootElement.getElementsByTagName('Declare'),
 
-        for (const tag of unsupportedTags) {
-          tag.remove();
+            ...rootElement.getElementsByTagName('Event')
+          ];
+
+          for (const tag of unsupportedTags) {
+            tag.remove();
+          }
         }
 
         this.value = `
           <Medici>
-            <View id="root" x={0} y={0} width={1024} height={544}>
+            <View id="root" x={0} y={40} width={1024} height={544}>
               ${innerJSX}
             </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
+            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
+            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
           </Medici>
         `;
 
@@ -203,10 +219,12 @@ class Medici extends Vasari {
       case 'APP':
         this.value = `
           <Medici>
-            <View id="root" x={0} y={0} width={1024} height={544}>
+            <View id="root" x={0} y={40} width={1024} height={544}>
               ${innerJSX}
             </View>
             <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={5} y={5} width={1014} height={30} />
+            <Rect fill style="linear-gradient(#80008040, #111, 512, 50, 0, 0)" x={0} y={40} width={1024} height={1} />
+            <Rect fill style="linear-gradient(#80008020, transparent, 50, 50, 0, 0)" x={0} y={0} width={1024} height={40} />
           </Medici>
         `;
 
@@ -214,21 +232,11 @@ class Medici extends Vasari {
     }
 
     this.state.search = path;
+    this.events = {};
+    this.listeners = {};
 
     this.render();
   };
-
-  /*******************************************
-   * Instance methods
-   *******************************************/
-
-  open () {
-    this.onLoad();
-  }
-
-  close () {
-    this.onUnload();
-  }
 }
 
 export default Medici;

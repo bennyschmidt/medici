@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import notifier from 'node-notifier';
 
+import { Pressable } from '../index.js';
+
 const ERROR_MESSAGE = {
   'HTTP/404': 'File not found.'
 };
@@ -9,7 +11,7 @@ const ERROR_MESSAGE = {
  * Media
  */
 
-class Media {
+class Media extends Pressable {
   static async load (filePath, onLoad) {
     let response;
 
@@ -37,14 +39,28 @@ class Media {
    * Init
    *******************************************/
 
-  constructor (path, onReady = () => null) {
+  constructor (path) {
+    super('media', { path });
+
     this.source = null;
     this.sourceType = null;
     this.encoding = null;
     this.format = null;
-    this.onReady = onReady.bind(this);
 
-    Media.load(path, this.onLoad.bind(this));
+    Media.load(path, this.load.bind(this));
+  }
+
+  /**
+   * toString
+   * A string representation of the component
+   **/
+
+  toString () {
+    return `${this.source}`;
+  }
+
+  load (source) {
+    this.onLoad(source);
   }
 
   onLoad (source) {
@@ -90,21 +106,7 @@ class Media {
 
     this.encoding = sourceType.slice(sourceType.indexOf(';') + 1, source.indexOf(','));
     this.format = sourceType.slice(sourceType.indexOf('/') + 1, sourceType.indexOf(';'));
-
-    this.onReady(source);
   }
-
-  toString () {
-    return `${this.source}`;
-  }
-
-  /*******************************************
-   * Method signatures
-   *******************************************/
-
-  onReady () {}
-  play () {}
-  stop () {}
 }
 
 export default Media;

@@ -1,31 +1,19 @@
 import { randomUUID } from 'crypto';
 
-import { Page } from '../index.js';
-
 /**
- * App
+ * Component
  */
 
-class App extends Page {
+class Component {
 
   /*******************************************
    * Init
    *******************************************/
 
-  constructor (
-    path,
-    variables = {},
-    attributes = {}
-  ) {
-    super(path);
-
-    this.type = 'app';
+  constructor (type, attributes = {}) {
+    this.type = type || 'component';
     this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.attributes = attributes;
-
-    for (const member of Object.keys(variables)) {
-      this[member] = variables[member];
-    }
   }
 
   /**
@@ -34,8 +22,8 @@ class App extends Page {
    **/
 
   toString () {
-    return `<App #${this.id}>`;
+    return `<${this.type.charAt(0).toUpperCase()}${this.type.slice(1)} #${this.id}>`;
   }
 }
 
-export default App;
+export default Component;

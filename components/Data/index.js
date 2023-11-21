@@ -1,18 +1,18 @@
-import { randomUUID } from 'crypto';
+import { Component } from '../index.js';
 
 /**
  * Data
  */
 
-class Data {
+class Data extends Component {
 
   /*******************************************
    * Init
    *******************************************/
 
   constructor (list, attributes = {}) {
-    this.type = 'data';
-    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
+    super('data', attributes);
+
     this.value = {};
     this.attributes = attributes;
 
@@ -56,6 +56,11 @@ class Data {
   get text () {
     return JSON.stringify(this.value);
   }
+
+  /**
+   * toString
+   * A string representation of the component
+   **/
 
   toString () {
     return this.text

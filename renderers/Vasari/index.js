@@ -107,7 +107,6 @@ class Vasari extends App {
    * open
    * close
    * onResize
-   * onReady
    * render
    * onLoad
    * onUnload
@@ -796,13 +795,13 @@ class Vasari extends App {
         attributes.width = textComponent.width;
         attributes.height = textComponent.height;
 
-        textComponent.textStyle = (
+        textComponent.attributes.textStyle = (
           this.state.hoverTarget === id
-            ? 'linear-gradient(purple, red, 150, 50, 0, 0)'
+            ? 'linear-gradient(purple, #111, 150, 50, 0, 0)'
             : (textComponent.attributes.textStyle || 'white')
         );
 
-        this.state.canvas.context.fillStyle = textComponent.textStyle;
+        this.state.canvas.context.fillStyle = textComponent.attributes.textStyle;
 
         this.state.canvas.context.fillText(
           attributes.text || attributes.source,
@@ -966,13 +965,6 @@ class Vasari extends App {
   };
 
   /**
-   * onReady
-   * Handle window ready
-   **/
-
-  onReady = () => this.open();
-
-  /**
    * onLoad
    * Handle window load
    **/
@@ -1115,18 +1107,6 @@ class Vasari extends App {
     this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
     this.render();
   };
-
-  /*******************************************
-   * Instance methods
-   *******************************************/
-
-  open () {
-    this.onLoad();
-  }
-
-  close () {
-    this.onUnload();
-  }
 }
 
 export default Vasari;
