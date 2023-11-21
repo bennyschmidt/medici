@@ -1,101 +1,11 @@
 import { randomUUID } from 'crypto';
 
+import {
+  PRINTABLE_KEYS,
+  SHIFT_KEYS
+} from '../../constants.js';
+
 import { Rect, Text } from '../index.js';
-
-const PRINTABLE_KEYS = [
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '0',
-  'q',
-  'w',
-  'e',
-  'r',
-  't',
-  'y',
-  'u',
-  'i',
-  'o',
-  'p',
-  'a',
-  's',
-  'd',
-  'f',
-  'g',
-  'h',
-  'j',
-  'k',
-  'l',
-  'z',
-  'x',
-  'c',
-  'v',
-  'b',
-  'n',
-  'm',
-  '`',
-  '~',
-  '!',
-  '@',
-  '#',
-  '$',
-  '%',
-  '^',
-  '&',
-  '*',
-  '(',
-  ')',
-  '[',
-  '{',
-  ']',
-  '}',
-  '-',
-  '_',
-  '=',
-  '+',
-  ';',
-  ':',
-  '\'',
-  '"',
-  ',',
-  '<',
-  '.',
-  '>',
-  '/',
-  '?',
-  '\\',
-  '|'
-];
-
-const SHIFT_KEYS = {
-  '`': '~',
-  '1': '!',
-  '2': '@',
-  '3': '#',
-  '4': '$',
-  '5': '%',
-  '6': '^',
-  '7': '&',
-  '8': '*',
-  '9': '(',
-  '10': ')',
-  '[': '{',
-  ']': '}',
-  '-': '_',
-  '=': '+',
-  ';': ':',
-  '\'': '"',
-  ',': '<',
-  '.': '>',
-  '/': '?',
-  '\\': '|'
-};
 
 /**
  * Input
@@ -107,32 +17,38 @@ class Input extends Rect {
    * Init
    *******************************************/
 
-  constructor (
+  constructor ({
+    id,
     x = 0,
     y = 0,
     width,
     height,
     placeholder = 'Type something...',
     value = '',
-    attributes = {}
-  ) {
-    super(
+    textStyle = 'white'
+  }) {
+    super({
+      id,
       x,
       y,
       width,
-      height,
-      attributes
-    );
+      height
+    });
 
     this.type = 'input';
-    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+    this.id = id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.placeholder = placeholder;
     this.value = value;
     this.isFocused = false;
+
+    this.attributes = {
+      ...this.attributes,
+
+      id: this.id,
+      placeholder,
+      value,
+      textStyle
+    };
 
     const padding = (height / 2) + 4;
 
@@ -143,26 +59,16 @@ class Input extends Rect {
       height: height - (padding * 2)
     };
 
-    this.textComponent = new Text(
-      placeholder,
-      textBox.left,
-      textBox.top,
-      textBox.width,
+    this.textComponent = new Text({
+      id: `text-${this.id}`,
+      text: value || placeholder,
+      x: textBox.left,
+      y: textBox.top,
+      maxWidth: textBox.width
+    });
 
-      {
-        ...({
-          ...attributes,
-
-          id: `text-${this.id}`,
-          rectComponent: this
-        }),
-
-        x: `${textBox.left}px`,
-        y: `${textBox.top}px`,
-        width: `${textBox.width}px`,
-        height: `${textBox.height}px`
-      }
-    );
+    this.textComponent.rectComponent = this;
+    this.textComponent.attributes.style = textStyle;
   }
 
   /**

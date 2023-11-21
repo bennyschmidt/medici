@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import { randomUUID } from 'crypto';
 
 import { Component, Data } from '../index.js';
 
@@ -19,13 +20,18 @@ class Document extends Component {
    * Init
    *******************************************/
 
-  constructor (path, attributes = {}) {
-    super('document', attributes);
+  constructor ({ id, path }) {
+    super('document', { id, path });
 
     this.source = null;
     this.sourceType = null;
     this.encoding = null;
     this.format = null;
+    this.data = null;
+
+    this.id = this.attributes.id = (
+      id || `${this.type}-${randomUUID().slice(0, 8)}`
+    );
 
     Document.load(path, this.open.bind(this));
   }

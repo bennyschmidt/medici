@@ -12,32 +12,38 @@ class Link extends Rect {
    * Init
    *******************************************/
 
-  constructor (
+  constructor ({
+    id,
     x = 0,
     y = 0,
     width,
     height,
     source = '',
     text = '',
-    attributes = {}
-  ) {
-    super(
+    textStyle = 'white'
+  }) {
+    super({
+      id,
       x,
       y,
       width,
-      height,
-      attributes
-    );
+      height
+    });
 
     this.type = 'link';
-    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+    this.id = id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.source = source;
     this.text = text;
     this.isFocused = false;
+
+    this.attributes = {
+      ...this.attributes,
+
+      id: this.id,
+      source,
+      text,
+      textStyle
+    };
 
     const padding = (height / 2) + 4;
 
@@ -48,26 +54,16 @@ class Link extends Rect {
       height: height - (padding * 2)
     };
 
-    this.textComponent = new Text(
-      text || source,
-      textBox.left,
-      textBox.top,
-      textBox.width,
+    this.textComponent = new Text({
+      id: `text-${this.id}`,
+      text,
+      x: textBox.left,
+      y: textBox.top,
+      maxWidth: textBox.width
+    });
 
-      {
-        ...({
-          ...attributes,
-
-          id: `text-${this.id}`,
-          rectComponent: this
-        }),
-
-        x: `${textBox.left}px`,
-        y: `${textBox.top}px`,
-        width: `${textBox.width}px`,
-        height: `${textBox.height}px`
-      }
-    );
+    this.textComponent.rectComponent = this;
+    this.textComponent.attributes.style = textStyle;
   }
 
   /**

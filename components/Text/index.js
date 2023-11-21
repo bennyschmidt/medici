@@ -10,19 +10,22 @@ class Text extends Component {
    * Init
    *******************************************/
 
-  constructor (
+  constructor ({
+    id,
     text = '',
     x = 0,
     y = 0,
-    maxWidth,
-    attributes = {}
-  ) {
-    super('text', attributes);
+    maxWidth
+  }) {
+    super('text', {
+      id,
+      text,
+      x,
+      y,
+      maxWidth
+    });
 
     this.text = text;
-    this.x = x;
-    this.y = y;
-    this.maxWidth = maxWidth;
   }
 
   /**

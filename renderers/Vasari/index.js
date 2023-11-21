@@ -25,20 +25,11 @@ import {
   View
 } from '../../components/index.js';
 
-const FPS = 30;
-const DEBOUNCE_INTERVAL = 30;
-
-const WINDOW_OPTIONS = {
-  title: 'Medici',
-  accelerated: true,
-  popupMenu: false,
-  width: 1024,
-  height: 576,
-  resizable: false
-};
-
-const DEFAULT_FONT_SIZE = 13;
-const DEFAULT_FONT = `normal 500 ${DEFAULT_FONT_SIZE}px sans-serif`;
+import {
+  DEBOUNCE_INTERVAL,
+  WINDOW_OPTIONS,
+  DEFAULT_FONT
+} from '../../constants.js';
 
 class Vasari extends App {
 
@@ -52,25 +43,26 @@ class Vasari extends App {
     const { width, height } = window;
     const stride = width * 4;
 
-    super(
+    super({
       path,
-      {
-        title,
-        state: {
-          ...state,
-
-          width: state.width || width,
-          height: state.height || height,
-          stride,
-          format: 'bgra32',
-          buffer: Buffer.alloc(stride * height),
-          canvas: null,
-          elements: {},
-          components: {},
-          search: ''
-        }
+      variables: {
+        title
       }
-    );
+    });
+
+    this.state = {
+      ...state,
+
+      width: state.width || width,
+      height: state.height || height,
+      stride,
+      format: 'bgra32',
+      buffer: Buffer.alloc(stride * height),
+      canvas: null,
+      elements: {},
+      components: {},
+      search: ''
+    };
 
     this.window = window;
 
@@ -335,9 +327,6 @@ class Vasari extends App {
       this.state.canvas.context[`${type}Style`] = style;
     }
 
-    delete attributes.x;
-    delete attributes.y;
-
     const tagName = method.toUpperCase();
     const generatedId = `${method.toLowerCase()}-${randomUUID().slice(0, 8)}`;
     const { id = generatedId } = attributes;
@@ -445,23 +434,13 @@ class Vasari extends App {
        *******************************************/
 
       case 'RECT':
-        this.state.components[id] = new Rect(
-          left,
-          top,
+        this.state.components[id] = new Rect({
+          id,
+          x: left,
+          y: top,
           width,
-          height,
-
-          {
-            id,
-
-            ...attributes,
-
-            left: `${left}px`,
-            top: `${top}px`,
-            width: `${width}px`,
-            height: `${height}px`
-          }
-        );
+          height
+        });
 
         this.state.canvas.context[methodName](
           left,
@@ -474,23 +453,13 @@ class Vasari extends App {
 
       case 'TEXT':
         this.state.components[id] = (
-          new Text(
-            attributes.text,
-            left,
-            top,
-            maxWidth,
-
-            {
-              id,
-
-              ...attributes,
-
-              x: `${left}px`,
-              y: `${top}px`,
-              width: `${width}px`,
-              height: `${height}px`
-            }
-          )
+          new Text({
+            id,
+            text: attributes.text,
+            x: left,
+            y: top,
+            maxWidth
+          })
         );
 
         this.state.canvas.context[methodName](
@@ -504,20 +473,14 @@ class Vasari extends App {
 
       case 'DATA':
         this.state.components[id] = (
-          new Data(
-            attributes.list,
-
-            {
-              id,
-
-              ...attributes,
-
-              x: `${left}px`,
-              y: `${top}px`,
-              width: `${width}px`,
-              height: `${height}px`
-            }
-          )
+          new Data({
+            id,
+            list: attributes.list,
+            x: left,
+            y: top,
+            width,
+            height
+          })
         );
 
         this.state.canvas.context.fillStyle = attributes.style;
@@ -532,23 +495,15 @@ class Vasari extends App {
         break;
 
       case 'IMAGE':
-        const image = new Image(
-          attributes.path,
-          {
-            x: left,
-            y: top,
-            width,
-            height,
+        const image = new Image({
+          id,
+          path: attributes.path,
+          x: left,
+          y: top,
+          width,
+          height,
 
-            attributes: {
-              id,
-              left: `${left}px`,
-              top: `${top}px`,
-              width: `${width}px`,
-              height: `${height}px`
-            }
-          },
-          () => {
+          onReady: () => {
             const canvasImage = new Canvas.Image();
 
             const isCover = !!attributes.cover;
@@ -578,7 +533,7 @@ class Vasari extends App {
 
             canvasImage.src = attributes.path;
           }
-        );
+        });
 
         this.state.components[id] = image;
 
@@ -586,20 +541,12 @@ class Vasari extends App {
 
       case 'VIEW':
         this.state.components[id] = (
-          new View(
-            left,
-            top,
+          new View({
+            x: left,
+            y: top,
             width,
-            height,
-
-            {
-              id,
-              left: `${left}px`,
-              top: `${top}px`,
-              width: `${width}px`,
-              height: `${height}px`
-            }
-          )
+            height
+          })
         );
 
         this.state.canvas.context.fillStyle = 'black';
@@ -624,23 +571,16 @@ class Vasari extends App {
           );
 
           const input = (
-            new Input(
-              left,
-              top,
+            new Input({
+              id,
+              x: left,
+              y: top,
               width,
               height,
               placeholder,
               value,
-
-              {
-                id,
-                left: `${left}px`,
-                top: `${top}px`,
-                width: `${width}px`,
-                height: `${height}px`,
-                textStyle: attributes.textStyle
-              }
-            )
+              textStyle: attributes.textStyle
+            })
           );
 
           component = this.state.components[id] = input;
@@ -661,7 +601,7 @@ class Vasari extends App {
           this.state.components[textComponent.id] = textComponent;
 
           if (this.state.search) {
-            this.state.canvas.context.fillStyle = textComponent.attributes.textStyle;
+            this.state.canvas.context.fillStyle = textComponent.attributes.style;
 
             this.state.canvas.context.font = (
               DEFAULT_FONT.replace('italic', 'normal')
@@ -674,16 +614,16 @@ class Vasari extends App {
             );
           }
 
-          attributes.left = textComponent.left;
-          attributes.top = textComponent.top;
-          attributes.width = textComponent.width;
-          attributes.height = textComponent.height;
+          attributes.left = textComponent.attributes.left;
+          attributes.top = textComponent.attributes.top;
+          attributes.width = textComponent.attributes.width;
+          attributes.height = textComponent.attributes.height;
 
           this.state.canvas.context.fillText(
             this.state.search || placeholder,
-            textComponent.x,
-            textComponent.y,
-            textComponent.width
+            textComponent.attributes.x,
+            textComponent.attributes.y,
+            textComponent.attributes.width
           );
 
           const inputEvent = {
@@ -758,23 +698,16 @@ class Vasari extends App {
 
       case 'LINK':
         const link = (
-          new Link(
-            left,
-            top,
+          new Link({
+            id,
+            x: left,
+            y: top,
             width,
             height,
-            attributes.source,
-            attributes.text,
-
-            {
-              id,
-              left: `${left}px`,
-              top: `${top}px`,
-              width: `${width}px`,
-              height: `${height}px`,
-              textStyle: attributes.textStyle
-            }
-          )
+            source: attributes.source,
+            text: attributes.text,
+            textStyle: attributes.textStyle
+          })
         );
 
         component = this.state.components[id] = link;
@@ -790,24 +723,24 @@ class Vasari extends App {
 
         this.state.components[textComponent.id] = textComponent;
 
-        attributes.left = textComponent.left;
-        attributes.top = textComponent.top;
-        attributes.width = textComponent.width;
-        attributes.height = textComponent.height;
+        attributes.left = textComponent.attributes.left;
+        attributes.top = textComponent.attributes.top;
+        attributes.width = textComponent.attributes.width;
+        attributes.height = textComponent.attributes.height;
 
-        textComponent.attributes.textStyle = (
+        textComponent.attributes.style = (
           this.state.hoverTarget === id
             ? 'linear-gradient(purple, #111, 150, 50, 0, 0)'
-            : (textComponent.attributes.textStyle || 'white')
+            : (textComponent.attributes.style || 'white')
         );
 
-        this.state.canvas.context.fillStyle = textComponent.attributes.textStyle;
+        this.state.canvas.context.fillStyle = textComponent.attributes.style;
 
         this.state.canvas.context.fillText(
-          attributes.text || attributes.source,
-          textComponent.x,
-          textComponent.y,
-          textComponent.width
+          textComponent.attributes.text || textComponent.attributes.source,
+          textComponent.attributes.x,
+          textComponent.attributes.y,
+          textComponent.attributes.width
         );
 
         const pointerEvent = {

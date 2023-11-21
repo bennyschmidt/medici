@@ -10,11 +10,27 @@ class Data extends Component {
    * Init
    *******************************************/
 
-  constructor (list, attributes = {}) {
-    super('data', attributes);
+  constructor ({
+    id,
+    list,
+    x = 0,
+    y = 0,
+    width = 0,
+    height = 0
+  }) {
+    super('data', {
+      id,
+      x,
+      y,
+      width,
+      height
+    });
 
     this.value = {};
-    this.attributes = attributes;
+
+    this.id = this.attributes.id = (
+      id || `${this.type}-${randomUUID().slice(0, 8)}`
+    );
 
     list.trim().split(',').forEach(property => {
       const [key = '', value = ''] = property.trim().split(':');

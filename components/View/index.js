@@ -12,23 +12,26 @@ class View extends Rect {
    * Init
    *******************************************/
 
-  constructor (
+  constructor ({
+    id,
     x,
     y,
     width,
-    height,
-    attributes = {}
-  ) {
-    super(
+    height
+  }) {
+    super({
+      id,
       x,
       y,
       width,
-      height,
-      attributes
-    );
+      height
+    });
 
     this.type = 'view';
-    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
+
+    this.id = this.attributes.id = (
+      id || `${this.type}-${randomUUID().slice(0, 8)}`
+    );
   }
 
   /**

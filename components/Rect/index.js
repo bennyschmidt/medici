@@ -1,3 +1,5 @@
+import { WINDOW_OPTIONS } from '../../constants.js';
+
 import { Pressable } from '../index.js';
 
 /**
@@ -10,19 +12,20 @@ class Rect extends Pressable {
    * Init
    *******************************************/
 
-  constructor (
+  constructor ({
+    id,
     x = 0,
     y = 0,
-    width,
-    height,
-    attributes = {}
-  ) {
-    super('rect', attributes);
-
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+    width = WINDOW_OPTIONS.width,
+    height = WINDOW_OPTIONS.height
+  }) {
+    super('rect', {
+      id,
+      x,
+      y,
+      width,
+      height
+    });
   }
 
   onHover (event, component) {

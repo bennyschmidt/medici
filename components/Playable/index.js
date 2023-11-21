@@ -12,33 +12,27 @@ class Playable extends Media {
    * Init
    *******************************************/
 
-  constructor (
+  constructor ({
+    id,
     path,
-    {
+    volume = 1.0,
+    start = 0,
+    tags = []
+  }) {
+    super({
+      id,
+      path,
       volume,
       start,
-      tags,
-      attributes = {}
-    } = {
-      volume: 1.0,
-      start: 0,
-      tags: [],
-      attributes: {}
-    }
-  ) {
-    super(path);
+      tags: [...new Set(tags)]
+    });
 
     this.type = 'playable';
-    this.id = `${this.type}-${randomUUID().slice(0, 8)}`;
-    this.volume = volume;
     this.time = start;
-    this.tags = [...new Set(tags)];
 
-    this.attributes = {
-      ...this.attributes,
-
-      ...attributes
-    };
+    this.id = this.attributes.id = (
+      id || `${this.type}-${randomUUID().slice(0, 8)}`
+    );
   }
 
   get currentTime () {

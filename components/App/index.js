@@ -12,16 +12,30 @@ class App extends Page {
    * Init
    *******************************************/
 
-  constructor (
+  constructor ({
+    id,
     path,
-    variables = {},
-    attributes = {}
-  ) {
-    super(path);
+    variables = {}
+  }) {
+    variables = {
+      title: variables.title || 'Application',
+
+      ...variables
+    };
+
+    super({
+      id,
+      path,
+      title: variables.title
+    });
 
     this.type = 'app';
-    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
-    this.attributes = attributes;
+    this.id = id || `${this.type}-${randomUUID().slice(0, 8)}`;
+
+    this.attributes = {
+      id: this.id,
+      path
+    };
 
     for (const member of Object.keys(variables)) {
       this[member] = variables[member];

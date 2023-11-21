@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import { Playable } from '../index.js';
 
 /**
@@ -10,32 +12,26 @@ class Audio extends Playable {
    * Init
    *******************************************/
 
-  constructor (
-    path,
-    {
+  constructor ({
+    id,
+    path = '',
+    volume = 1.0,
+    start = 0,
+    tags = []
+  }) {
+    super({
+      id,
+      path,
       volume,
       start,
-      tags,
-      attributes
-    } = {
-      volume: 1.0,
-      start: 0,
-      tags: [],
-      attributes: {}
-    }
-  ) {
-    super(
-      path,
-
-      {
-        volume,
-        start,
-        tags,
-        attributes
-      }
-    );
+      tags: [...new Set(tags)]
+    });
 
     this.type = 'audio';
+
+    this.id = this.attributes.id = (
+      id || `${this.type}-${randomUUID().slice(0, 8)}`
+    );
   }
 }
 

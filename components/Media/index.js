@@ -39,15 +39,15 @@ class Media extends Pressable {
    * Init
    *******************************************/
 
-  constructor (path) {
-    super('media', { path });
+  constructor (attributes = {}) {
+    super('media', attributes);
 
     this.source = null;
     this.sourceType = null;
     this.encoding = null;
     this.format = null;
 
-    Media.load(path, this.load.bind(this));
+    Media.load(attributes.path, this.load.bind(this));
   }
 
   /**

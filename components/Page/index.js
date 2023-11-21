@@ -12,22 +12,22 @@ class Page extends Document {
    * Init
    *******************************************/
 
-  constructor (
+  constructor ({
+    id,
     path,
-    {
-      title,
-      attributes = {}
-    } = {
-      title: 'Untitled',
-      attributes: {}
-    }
-  ) {
-    super(path);
+    title = 'Untitled'
+  }) {
+    super({ id, path });
 
     this.type = 'page';
-    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
+    this.id = id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.title = title;
     this.value = null;
+
+    this.attributes = {
+      id: this.id,
+      title
+    };
   }
 
   /**

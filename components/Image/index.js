@@ -1,5 +1,7 @@
 import { randomUUID } from 'crypto';
 
+import { WINDOW_OPTIONS } from '../../constants.js';
+
 import { Media } from '../index.js';
 
 /**
@@ -46,50 +48,41 @@ class Image extends Media {
    * Init
    *******************************************/
 
-  constructor (
-    path,
-    {
-      x = 0,
-      y = 0,
-      width = 0,
-      height = 0,
-      tags = [],
-      attributes = {}
-    } = {
-      x: 0,
-      y: 0,
-      width: 300,
-      height: 300,
-      tags: [],
-      attributes: {}
-    },
-    didLoad = () => null
-  ) {
-    super(path);
+  constructor ({
+    id,
+    path = '',
+    x = 0,
+    y = 0,
+    width = WINDOW_OPTIONS.width,
+    height = WINDOW_OPTIONS.height,
+    tags = [],
+    onReady = () => null
+  }) {
+    super({
+      id,
+      path,
+      x,
+      y,
+      width,
+      height,
+      tags: [...new Set(tags)]
+    });
 
     this.type = 'image';
-    this.id = attributes.id || `${this.type}-${randomUUID().slice(0, 8)}`;
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.tags = [...new Set(tags)];
 
-    this.attributes = {
-      ...this.attributes,
+    this.id = this.attributes.id = (
+      id || `${this.type}-${randomUUID().slice(0, 8)}`
+    );
 
-      ...attributes
-    };
-
-    didLoad();
+    onReady();
   }
 
   get pixelWidth () {
-    return `${this.width}px`;
+    return this.width;
   }
 
   get pixelHeight () {
-    return `${this.height}px`;
+    return this.height;
   }
 
   onHover (event, component) {
