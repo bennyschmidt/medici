@@ -1,3 +1,5 @@
+import { WINDOW_OPTIONS } from '../../constants.js';
+
 import { Component } from '../index.js';
 
 /**
@@ -15,14 +17,16 @@ class Text extends Component {
     text = '',
     x = 0,
     y = 0,
-    maxWidth
+    maxWidth = WINDOW_OPTIONS.width,
+    size = 13
   }) {
     super('text', {
       id,
       text,
       x,
       y,
-      maxWidth
+      maxWidth,
+      size
     });
 
     this.text = text;

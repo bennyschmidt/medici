@@ -28,7 +28,8 @@ import {
 import {
   DEBOUNCE_INTERVAL,
   WINDOW_OPTIONS,
-  DEFAULT_FONT
+  DEFAULT_FONT,
+  DEFAULT_FONT_SIZE
 } from '../../constants.js';
 
 class Vasari extends App {
@@ -458,9 +459,16 @@ class Vasari extends App {
             text: attributes.text,
             x: left,
             y: top,
-            maxWidth
+            maxWidth,
+            size: attributes?.size || DEFAULT_FONT_SIZE
           })
         );
+
+        if (attributes?.size) {
+          this.state.canvas.context.font = (
+            DEFAULT_FONT.replace(`${DEFAULT_FONT_SIZE}px`, `${attributes.size}px`)
+          );
+        }
 
         this.state.canvas.context[methodName](
           `${attributes.text}`,
@@ -600,6 +608,11 @@ class Vasari extends App {
 
           this.state.components[textComponent.id] = textComponent;
 
+          attributes.left = textComponent.attributes.left;
+          attributes.top = textComponent.attributes.top;
+          attributes.width = textComponent.attributes.width;
+          attributes.height = textComponent.attributes.height;
+
           if (this.state.search) {
             this.state.canvas.context.fillStyle = textComponent.attributes.style;
 
@@ -614,10 +627,7 @@ class Vasari extends App {
             );
           }
 
-          attributes.left = textComponent.attributes.left;
-          attributes.top = textComponent.attributes.top;
-          attributes.width = textComponent.attributes.width;
-          attributes.height = textComponent.attributes.height;
+          this.state.canvas.context.textRendering = 'optimizeLegibility';
 
           this.state.canvas.context.fillText(
             this.state.search || placeholder,
@@ -730,8 +740,8 @@ class Vasari extends App {
 
         textComponent.attributes.style = (
           this.state.hoverTarget === id
-            ? 'linear-gradient(purple, #111, 150, 50, 0, 0)'
-            : (textComponent.attributes.style || 'white')
+            ? 'purple'
+            : textComponent.attributes.style
         );
 
         this.state.canvas.context.fillStyle = textComponent.attributes.style;
