@@ -1,65 +1,27 @@
 # Medici
 A JSX-native peer-to-peer browser
 
-![screenshot](https://github.com/bennyschmidt/medici/assets/45407493/1d6c378a-2dcd-4806-b4cb-1e87ad0ece4a)
+![Screenshot from 2023-11-21 11-44-30](https://github.com/bennyschmidt/medici/assets/45407493/4b3b50cb-8142-4d84-9ea1-b757619e9142)
 
 `featured.jsx`
 
 ```jsx
 <>
-  <Text 
-    fill 
-    style="linear-gradient(purple, red, 150, 50, 0, 0)" 
-    text="Featured files" 
-    x={0} 
-    y={56} 
-  />
-
-  <Link 
-    source="@exactchange:text:example" 
-    text="Example text link" 
-    id="link1" 
-    x={0} 
-    y={80} 
-    width={200} 
-    height={24} 
-  />
-
-  <Link 
-    source="@exactchange:image:example" 
-    text="Example image link" 
-    id="link3" 
-    x={0} 
-    y={128} 
-    width={200} 
-    height={24} 
-  />
-
-  <Link 
-    source="@exactchange:audio:example" 
-    text="Example audio link" 
-    id="link5" 
-    x={0} 
-    y={176} 
-    width={200} 
-    height={24} 
-  />
-
-  <Link 
-    source="@exactchange:page:example" 
-    text="Example page link" 
-    id="link7" 
-    x={0} 
-    y={224} 
-    width={200} 
-    height={24} 
-  />
+  <Text fill style="linear-gradient(purple, red, 150, 50, 0, 0)" size={26} text="Featured files" x={8} y={36} />
+  <Link source="@exactchange:text:example" text="Example text link" id="link1" x={0} y={50} width={200} height={24} />
+  <Link source="@exactchange:data:example" text="Example data link" id="link2" x={0} y={74} width={200} height={24} />
+  <Link source="@exactchange:image:example" text="Example image link" id="link3" x={0} y={98} width={200} height={24} />
+  <Link source="@exactchange:image:davinci" text="Davinci drawing link" id="link4" x={0} y={122} width={200} height={24} />
+  <Link source="@exactchange:audio:example" text="Example audio link" id="link5" x={0} y={146} width={200} height={24} />
+  <Link source="@exactchange:video:example" text="Example video link" id="link6" x={0} y={170} width={200} height={24} />
+  <Link source="@exactchange:page:example" text="Example page link" id="link7" x={0} y={194} width={200} height={24} />
+  <Link source="@exactchange:app:example" text="Example app link" id="link8" x={0} y={218} width={200} height={24} />
 </>
 ```
 
 Navigate to files in the peer network:
 
-![image](https://github.com/bennyschmidt/medici/assets/45407493/409aed09-0a2f-404d-8366-fb8202b8088f)
+![Screenshot from 2023-11-21 11-44-38](https://github.com/bennyschmidt/medici/assets/45407493/e0a1f22d-cf62-4aa5-8e45-5a1de5a03b81)
 
 ##### Peer-to-peer
 
