@@ -1,8 +1,7 @@
 # Medici
 A JSX-native peer-to-peer browser
 
-![Screenshot from 2023-11-21 11-44-30](https://github.com/bennyschmidt/medici/assets/45407493/4b3ca64f-e1e2-48ff-9c91-4a062bf787c1)
-
+![screenshot](https://github.com/bennyschmidt/medici/assets/45407493/d148be80-5048-4832-b63a-48d478a72ce3)
 
 `featured.jsx`
 
@@ -22,7 +21,7 @@ A JSX-native peer-to-peer browser
 
 Navigate to files in the peer network:
 
-![Screenshot from 2023-11-21 11-44-38](https://github.com/bennyschmidt/medici/assets/45407493/2b506a44-a6c2-448e-9460-be18a26a209f)
+![screenshot(1)](https://github.com/bennyschmidt/medici/assets/45407493/bb418f52-41f0-4eff-9e64-3c4b1430e9f2)
 
 ##### Peer-to-peer
 
