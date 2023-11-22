@@ -73,43 +73,26 @@ These directories correspond to native content types in Medici:
 
 ```jsx
 <>
-  <Declare foo={0} bar="baz">
-    /* could be a self-closing tag if only defining vars */
-  </Declare>
-
-  <Declare qux={true} />
-
+  <Declare boxId="redBox" boxColor="red" />
   <Declare>
-    /* runs on every render */
+    const box = this.getElementById(state.boxId);
 
-    console.log('render', state);
-  </Declare>
+    console.log('render', state.boxId);
 
-  <Event id="handleHover">
-    /* event handling */
-
-    console.log('hover', event, state.bar);
-
-    state.bar = 'quux';
-  </Event>
-
-  <Event id="handleClick">
-    /* state management */
-
-    const { foo } = state;
-
-    console.log('click', foo);
-    state.set('foo', foo + 1);
-
-    if (foo > 10) {
-      console.log('click', event, foo);
+    if (box?.attributes) {
+      this.updateElementById(this.state.boxId, {
+        x: box.attributes.x + 10,
+        y: box.attributes.y
+      });
     }
+  </Declare>
+  <Event id="handleHover">
+    console.log('hovering over the box');
   </Event>
-
-  <Text id="heading" fill style="white" text="Interactive Squares. The number is ${foo}" x={15} y={20} />
-
-  <Rect id="redBox" fill style="red" x={0} y={30} width={100} height={100} hover={handleHover} />
-  <Rect id="yellowBox" fill style="yellow" x={130} y={30} width={100} height={100} click={handleClick} />
-  <Rect id="blueBox" fill style="blue" x={260} y={30} width={100} height={100} />
+  <Event id="handleClick">
+    console.log('box click');
+  </Event>
+  <Text id="heading" fill style="white" text="Click the box!" x={15} y={20} />
+  <Rect id="redBox" fill style="${boxColor}" x={0} y={30} width={100} height={100} hover={handleHover} click={handleClick} />
 </>
 ```
