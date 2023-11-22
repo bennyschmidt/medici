@@ -68,3 +68,48 @@ These directories correspond to native content types in Medici:
 - No relation to conventional browsers: Not based on Chromium or Blink, WebKit, or any mainstream rendering engine.
 - JSX is native code in Medici and transpiles to `Canvas` (not HTML/CSS rendering). 
 - Supports native 2D and 3D drawing via `Canvas`, `WebGL`, and/or `WebGPU`.
+
+##### Stateful JSX (native!) example
+
+```
+<>
+  <Declare foo={0} bar="baz">
+    /* could be a self-closing tag if only defining vars */
+  </Declare>
+
+  <Declare qux={true} />
+
+  <Declare>
+    /* runs on every render */
+
+    console.log('render', state);
+  </Declare>
+
+  <Event id="handleHover">
+    /* event handling */
+
+    console.log('hover', event, state.bar);
+
+    state.bar = 'quux';
+  </Event>
+
+  <Event id="handleClick">
+    /* state management */
+
+    const { foo } = state;
+
+    console.log('click', foo);
+    state.set('foo', foo + 1);
+
+    if (foo > 10) {
+      console.log('click', event, foo);
+    }
+  </Event>
+
+  <Text id="heading" fill style="white" text="Interactive Squares. The number is ${foo}" x={15} y={20} />
+
+  <Rect id="redBox" fill style="red" x={0} y={30} width={100} height={100} hover={handleHover} />
+  <Rect id="yellowBox" fill style="yellow" x={130} y={30} width={100} height={100} click={handleClick} />
+  <Rect id="blueBox" fill style="blue" x={260} y={30} width={100} height={100} />
+</>
+```
