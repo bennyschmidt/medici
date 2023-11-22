@@ -38,13 +38,15 @@ class Pressable extends Component {
     this.height = `${height}px`;
   }
 
-  onHover (event, component) {
-    console.log('onHover', event, component.id);
-  }
+  /*******************************************
+   * Method signatures
+   *
+   * onHover
+   * onClick
+   *******************************************/
 
-  onClick (event, component) {
-    console.log('onClick', event, component.id);
-  }
+  onHover (/* event, component */) {}
+  onClick (/* event, component */) {}
 }
 
 export default Pressable;

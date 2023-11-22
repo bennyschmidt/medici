@@ -1,9 +1,10 @@
 /*******************************************
  * Vespucci
- * A JSX-native peer-to-peer browser
+ * A JSX-native peer-to-peer navigator
  *
  * Extends Vasari with a navigator
- * and history
+ * and history, and provides a generic
+ * browsing user interface
  *******************************************/
 
 import notifier from 'node-notifier';
@@ -65,13 +66,17 @@ class Vespucci extends Vasari {
    **/
 
   onNavigate = async (path = '') => {
-    if (!path) return;
+    if (path.length < 4 || !path.match(/@|:/g)) return;
 
-    const [
+    let [
       namespace = '',
       contentType = '',
       fileName = ''
     ] = path.toLowerCase().split(':');
+
+    if (!fileName) {
+      return this.onNavigate(`${namespace}:app:${contentType}`);
+    }
 
     const type = contentType.toUpperCase();
     const isMedia = type === 'IMAGE' || type === 'VIDEO';

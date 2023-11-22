@@ -3,9 +3,11 @@
  * A JSX-to-Canvas renderer
  *
  * Transpiles JSX markup to Canvas
- * operations, manages a render loop,
- * tracks a component tree, and retains
- * extensible window and document states
+ * drawing, manages a render loop,
+ * tracks a component tree, binds
+ * user events and scripting, and
+ * retains window and document
+ * states
  *******************************************/
 
 import { randomUUID } from 'crypto';
@@ -183,6 +185,62 @@ class Vasari extends App {
     const { firstChild: rootElement } = html;
 
     return rootElement;
+  };
+
+  /**
+   * getComponentById
+   * Query a state component
+   **/
+
+  getComponentById = id => this.state.components[id];
+
+  /**
+   * getElementById
+   * Query a state element
+   **/
+
+  getElementById = id => this.state.elements[id];
+
+  /**
+   * updateElementById
+   * Query and update state element
+   **/
+
+  updateElementById = (id, update = {}) => {
+    const component = {
+      ...this.getComponentById(id)
+    };
+
+    const element = {
+      ...this.getElementById(id)
+    };
+
+    for (const key in update) {
+      if (key in component) {
+        component[key] = update[key];
+      }
+
+      if (key in component.attributes) {
+        component.attributes[key] = update[key];
+      }
+
+      if (key in element) {
+        element[key] = update[key];
+      }
+
+      if (key in element.attributes) {
+        element.attributes[key] = update[key];
+      }
+    }
+
+    const jsxElement = element.toString();
+
+    console.log(`<${element.rawTagName} ${element.rawAttrs}/>`);
+
+    this.state.components[id] = component;
+    this.state.elements[id] = element;
+
+    this.render();
   };
 
   /**
@@ -1082,7 +1140,13 @@ class Vasari extends App {
       isY = y >= top && y <= (top + +height);
 
       if (isX && isY) {
-        listenerElement.onHover(event);
+        const component = this.state.components[listener];
+
+        if (listenerElement?.onHover) {
+          listenerElement.onHover.call(this, event, component);
+        } else {
+          component.onHover.call(this, event, component);
+        }
       }
     }
 
@@ -1123,7 +1187,13 @@ class Vasari extends App {
       isY = y >= top && y <= (top + +height);
 
       if (isX && isY) {
-        listenerElement.onClick(event);
+        const component = this.state.components[listener];
+
+        if (listenerElement?.onClick) {
+          listenerElement.onClick.call(this, event, component);
+        } else {
+          component.onClick.call(this, event, component);
+        }
       }
     }
 
@@ -1139,19 +1209,19 @@ class Vasari extends App {
   onKeyDown = event => {
     if (this._nextEvent > Date.now()) return;
 
-    let listenerElement;
-
     for (let listener of Object.keys(this.listeners)) {
-      const element = this.listeners[listener];
+      const listenerElement = this.listeners[listener];
 
-      if (!element?.onKeyDown) continue;
+      if (listenerElement?.onKeyDown) {
+        const component = this.state.components[listener];
 
-      listenerElement = element;
+        if (listenerElement?.onKeyDown) {
+          listenerElement.onKeyDown.call(this, event, component);
+        } else {
+          component.onKeyDown.call(this, event, component);
+        }
+      }
     }
-
-    if (!listenerElement?.onKeyDown) return;
-
-    listenerElement.onKeyDown.call(listenerElement, event);
 
     this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
     this.render();

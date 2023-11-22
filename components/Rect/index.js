@@ -30,24 +30,6 @@ class Rect extends Pressable {
       height
     });
   }
-
-  /**
-   * onHover
-   * Handle hover
-   **/
-
-  onHover (event, component) {
-    console.log('Rect.onHover', event, component.id);
-  }
-
-  /**
-   * onClick
-   * Handle click
-   **/
-
-  onClick (event, component) {
-    console.log('Rect.onClick', event, component.id);
-  }
 }
 
 export default Rect;
