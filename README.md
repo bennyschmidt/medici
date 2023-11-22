@@ -71,7 +71,7 @@ These directories correspond to native content types in Medici:
 
 ##### Stateful JSX (native!) example
 
-```
+```jsx
 <>
   <Declare foo={0} bar="baz">
     /* could be a self-closing tag if only defining vars */
