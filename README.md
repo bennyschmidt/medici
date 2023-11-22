@@ -21,7 +21,7 @@ A JSX-native peer-to-peer browser
 
 Navigate to files in the peer network:
 
-![Screenshot from 2023-11-21 11-44-38](https://github.com/bennyschmidt/medici/assets/45407493/2b506a44-a6c2-448e-9460-be18a26a209f)
+![screenshot(1)](https://github.com/bennyschmidt/medici/assets/45407493/bb418f52-41f0-4eff-9e64-3c4b1430e9f2)
 
 ##### Peer-to-peer
 
