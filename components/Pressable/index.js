@@ -1,10 +1,13 @@
+/*******************************************
+ * Pressable
+ *
+ * Extends the base Component class with
+ * pointer events
+ *******************************************/
+
 import { Component } from '../index.js';
 
 import { WINDOW_OPTIONS } from '../../constants.js';
-
-/**
- * Pressable
- */
 
 class Pressable extends Component {
 

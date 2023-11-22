@@ -1,8 +1,11 @@
-import { randomUUID } from 'crypto';
-
-/**
+/*******************************************
  * Component
- */
+ *
+ * The base component class with common
+ * methods and properties
+ *******************************************/
+
+import { randomUUID } from 'crypto';
 
 class Component {
 

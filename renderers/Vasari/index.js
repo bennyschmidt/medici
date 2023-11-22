@@ -1,10 +1,11 @@
 /*******************************************
  * Vasari
- * A JSX-to-Canvas Renderer
+ * A JSX-to-Canvas renderer
  *
- * You must extend this class with
- * controller logic and an accompanying
- * JSX file.
+ * Transpiles JSX markup to Canvas
+ * operations, manages a render loop,
+ * tracks a component tree, and retains
+ * extensible window and document states
  *******************************************/
 
 import { randomUUID } from 'crypto';
@@ -97,12 +98,7 @@ class Vasari extends App {
    * getElementAttributes
    * parseAppearanceAttributes
    * renderElement
-   * open
-   * close
-   * onResize
    * render
-   * onLoad
-   * onUnload
    *******************************************/
 
   /**
@@ -927,6 +923,13 @@ class Vasari extends App {
 
   /*******************************************
    * Events
+   *
+   * onResize
+   * onLoad
+   * onUnload
+   * onHover
+   * onClick
+   * onKeyDown
    *******************************************/
 
   /**
@@ -949,7 +952,9 @@ class Vasari extends App {
    * Handle window load
    **/
 
-  onLoad = () => {
+  onLoad = (source) => {
+    this.source = source;
+
     const onResize = this.onResize.bind(this);
     const onClick = this.onClick.bind(this);
     const onHover = this.onHover.bind(this);

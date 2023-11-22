@@ -1,10 +1,13 @@
+/*******************************************
+ * Page
+ *
+ * Extends Document with a title and
+ * JSX value
+ *******************************************/
+
 import { randomUUID } from 'crypto';
 
 import { Document } from '../index.js';
-
-/**
- * Page
- */
 
 class Page extends Document {
 
@@ -22,7 +25,7 @@ class Page extends Document {
     this.type = 'page';
     this.id = id || `${this.type}-${randomUUID().slice(0, 8)}`;
     this.title = title;
-    this.value = null;
+    this.value = '';
 
     this.attributes = {
       id: this.id,

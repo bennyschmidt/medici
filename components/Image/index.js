@@ -1,12 +1,14 @@
+/*******************************************
+ * Image
+ *
+ * A viewable image
+ *******************************************/
+
 import { randomUUID } from 'crypto';
 
 import { WINDOW_OPTIONS } from '../../constants.js';
 
 import { Media } from '../index.js';
-
-/**
- * Image
- */
 
 class Image extends Media {
   static fit (isContain) {
@@ -85,9 +87,19 @@ class Image extends Media {
     return this.height;
   }
 
+  /**
+   * onHover
+   * Handle hover
+   **/
+
   onHover (event, component) {
     console.log('Image.onHover', event, component.id);
   }
+
+  /**
+   * onClick
+   * Handle click
+   **/
 
   onClick (event, component) {
     console.log('Image.onClick', event, component.id);

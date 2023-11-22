@@ -1,10 +1,13 @@
+/*******************************************
+ * Rect
+ *
+ * Extends Pressable with a viewable
+ * rectangle element
+ *******************************************/
+
 import { WINDOW_OPTIONS } from '../../constants.js';
 
 import { Pressable } from '../index.js';
-
-/**
- * Rect
- */
 
 class Rect extends Pressable {
 
@@ -28,9 +31,19 @@ class Rect extends Pressable {
     });
   }
 
+  /**
+   * onHover
+   * Handle hover
+   **/
+
   onHover (event, component) {
     console.log('Rect.onHover', event, component.id);
   }
+
+  /**
+   * onClick
+   * Handle click
+   **/
 
   onClick (event, component) {
     console.log('Rect.onClick', event, component.id);

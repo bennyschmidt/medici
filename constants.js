@@ -4,11 +4,28 @@ const DEBOUNCE_INTERVAL = 30;
 const WINDOW_OPTIONS = {
   title: 'Medici',
   width: 1024,
-  height: 576
+  height: 576,
+  borderless: true
 };
 
 const DEFAULT_FONT_SIZE = 13;
 const DEFAULT_FONT = `normal 500 ${DEFAULT_FONT_SIZE}px sans-serif`;
+
+const FILE_EXTENSIONS = {
+  app: 'jsx',
+  audio: 'mp3',
+  data: 'json',
+  image: 'png',
+  page: 'jsx',
+  text: 'txt',
+  video: 'mp4'
+};
+
+const ERROR_MESSAGE = {
+  'HTTP/404': 'Error fetching resource.'
+};
+
+const DEFAULT_PATH = '@exactchange:page:featured';
 
 const PRINTABLE_KEYS = [
   '1',
@@ -111,6 +128,9 @@ export {
   WINDOW_OPTIONS,
   DEFAULT_FONT,
   DEFAULT_FONT_SIZE,
+  FILE_EXTENSIONS,
+  ERROR_MESSAGE,
+  DEFAULT_PATH,
   PRINTABLE_KEYS,
   SHIFT_KEYS
 };

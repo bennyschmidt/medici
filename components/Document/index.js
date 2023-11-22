@@ -1,11 +1,14 @@
+/*******************************************
+ * Document
+ *
+ * Represents a viewable file or
+ * document element
+ *******************************************/
+
 import fs from 'fs/promises';
 import { randomUUID } from 'crypto';
 
 import { Component, Data } from '../index.js';
-
-/**
- * Document
- */
 
 class Document extends Component {
   static async load (filePath, onLoad) {
@@ -45,13 +48,28 @@ class Document extends Component {
     return this.data?.toString?.() || '';
   }
 
+  /**
+   * open
+   * Open a file or document source
+   **/
+
   open (source) {
     this.onLoad(source);
   }
 
+  /**
+   * close
+   * Close and unload the current file
+   **/
+
   close () {
     this.onUnload();
   }
+
+  /**
+   * onLoad
+   * Handle load
+   **/
 
   onLoad (source) {
     const json = JSON.parse(source?.toString());
@@ -79,10 +97,6 @@ class Document extends Component {
 
     this.encoding = sourceType.slice(sourceType.indexOf(';') + 1, source.indexOf(','));
     this.format = sourceType.slice(sourceType.indexOf('/') + 1, sourceType.indexOf(';'));
-  }
-
-  onScroll (event) {
-    console.log('scroll', event);
   }
 }
 

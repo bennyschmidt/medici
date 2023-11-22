@@ -1,6 +1,9 @@
 /*******************************************
  * Medici
  * A JSX-native peer-to-peer browser
+ *
+ * Extends Vasari with a navigator
+ * and history
  *******************************************/
 
 import notifier from 'node-notifier';
@@ -8,21 +11,12 @@ import notifier from 'node-notifier';
 import __dirname from '../../__dirname.js';
 import Peers from '../../peers.json' assert { type: 'json' };
 
+import {
+  FILE_EXTENSIONS,
+  ERROR_MESSAGE
+} from '../../constants.js';
+
 import { Vasari } from '../index.js';
-
-const FILE_EXTENSIONS = {
-  app: 'jsx',
-  audio: 'mp3',
-  data: 'json',
-  image: 'png',
-  page: 'jsx',
-  text: 'txt',
-  video: 'mp4'
-};
-
-const ERROR_MESSAGE = {
-  'HTTP/404': 'Error fetching resource.'
-};
 
 class Medici extends Vasari {
 
@@ -35,11 +29,38 @@ class Medici extends Vasari {
       `${__dirname}/renderers/Medici/browser.jsx`,
       'Medici'
     );
+
+    this.state.history = [];
   }
 
   /*******************************************
-   * Methods
+   * Events
+   *
+   * onBack
+   * onNavigate
    *******************************************/
+
+  /**
+   * onBack
+   * Load the previous path
+   **/
+
+  onBack = () => {
+    // current
+
+    this.state.history.pop();
+
+    // previous
+
+    const previous = this.state.history.pop();
+
+    this.onNavigate(previous);
+  };
+
+  /**
+   * onNavigate
+   * Navigate to a path
+   **/
 
   onNavigate = async (path = '') => {
     if (!path) return;
@@ -76,6 +97,7 @@ class Medici extends Vasari {
     }
 
     const innerJSX = file.toString();
+    const docSnapshot = this.source.toString();
 
     if (isMedia) {
       const base64String = Buffer.from(file).toString('base64');
@@ -111,14 +133,12 @@ class Medici extends Vasari {
 
     switch (type) {
       case 'TEXT':
-        this.value = `
-          <Medici>
-            <View id="root" x={0} y={0} width={1024} height={544}>
-              <Text fill style="white" text="${file}" x={10} y={60} maxWidth={1024} />
-            </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
-          </Medici>
-        `;
+        this.value = docSnapshot.replace(
+          '<%ROOT%>', `
+          <View id="root" x={0} y={0} width={1024} height={544}>
+            <Text fill style="white" text="${file}" x={10} y={60} maxWidth={1024} />
+          </View>
+        `);
 
         break;
 
@@ -129,59 +149,51 @@ class Medici extends Vasari {
           .slice(1, -1)
           .trim();
 
-        this.value = `
-          <Medici>
-            <View id="root" x={0} y={0} width={1024} height={544}>
-              <Data style="white" list="${list}" x={10} y={60} maxWidth={1024} />
-            </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
-          </Medici>
-        `;
+        this.value = docSnapshot.replace(
+          '<%ROOT%>', `
+          <View id="root" x={0} y={0} width={1024} height={544}>
+            <Data style="white" list="${list}" x={10} y={60} maxWidth={1024} />
+          </View>
+        `);
 
         break;
 
       case 'IMAGE':
-        this.value = `
-          <Medici>
-            <View id="root" x={0} y={40} width={1024} height={544}>
-              <Image path="${file}" x={0} y={0} width={1024} height={544} />
-            </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
-          </Medici>
-        `;
+        this.value = docSnapshot.replace(
+          '<%ROOT%>', `
+          <View id="root" x={0} y={40} width={1024} height={544}>
+            <Image path="${file}" x={0} y={0} width={1024} height={544} />
+          </View>
+        `);
 
         break;
 
       case 'AUDIO':
-        this.value = `
-          <Medici>
-            <View id="root" x={0} y={40} width={1024} height={544}>
-              <Text fill style="white" text="Audio not yet supported." x={10} y={60} maxWidth={1024} />
-              <Audio path="${file}" />
-            </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
-          </Medici>
-        `;
+        this.value = docSnapshot.replace(
+          '<%ROOT%>', `
+          <View id="root" x={0} y={40} width={1024} height={544}>
+            <Text fill style="white" text="Audio not yet supported." x={10} y={60} maxWidth={1024} />
+            <Audio path="${file}" />
+          </View>
+        `);
 
         break;
 
       case 'VIDEO':
-        this.value = `
-          <Medici>
-            <View id="root" x={0} y={0} width={1024} height={544}>
-              <Text fill style="white" text="Video not yet supported." x={10} y={60} maxWidth={1024} />
-              <Video path="${file}" />
-            </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
-          </Medici>
-        `;
+        this.value = docSnapshot.replace(
+          '<%ROOT%>', `
+          <View id="root" x={0} y={0} width={1024} height={544}>
+            <Text fill style="white" text="Video not yet supported." x={10} y={60} maxWidth={1024} />
+            <Video path="${file}" />
+          </View>
+        `);
 
         break;
 
       case 'PAGE':
         const rootElement = this.parseJSX();
 
-        if (rootElement.childNodes) {
+        if (rootElement?.childNodes) {
           const unsupportedTags = [
             ...rootElement.getElementsByTagName('Declare'),
 
@@ -193,26 +205,22 @@ class Medici extends Vasari {
           }
         }
 
-        this.value = `
-          <Medici>
-            <View id="root" x={0} y={40} width={1024} height={544}>
-              ${innerJSX}
-            </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
-          </Medici>
-        `;
+        this.value = docSnapshot.replace(
+          '<%ROOT%>', `
+          <View id="root" x={0} y={40} width={1024} height={544}>
+            ${innerJSX}
+          </View>
+        `);
 
         break;
 
       case 'APP':
-        this.value = `
-          <Medici>
-            <View id="root" x={0} y={40} width={1024} height={544}>
-              ${innerJSX}
-            </View>
-            <Input stroke id="search" lineWidth={0} style="transparent" placeholder="Search apps & content..." textStyle="white" x={0} y={0} width={1024} height={36} />
-          </Medici>
-        `;
+        this.value = docSnapshot.replace(
+          '<%ROOT%>', `
+          <View id="root" x={0} y={40} width={1024} height={544}>
+            ${innerJSX}
+          </View>
+        `);
 
         break;
     }
@@ -221,6 +229,7 @@ class Medici extends Vasari {
     this.events = {};
     this.listeners = {};
 
+    this.state.history.push(path);
     this.render();
   };
 }

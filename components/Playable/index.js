@@ -1,10 +1,13 @@
+/*******************************************
+ * Playable
+ *
+ * Extends Media with base methods and
+ * properties for media playback
+ *******************************************/
+
 import { randomUUID } from 'crypto';
 
 import { Media } from '../index.js';
-
-/**
- * Playable
- */
 
 class Playable extends Media {
 

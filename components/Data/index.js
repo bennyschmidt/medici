@@ -1,8 +1,11 @@
-import { Component } from '../index.js';
-
-/**
+/*******************************************
  * Data
- */
+ *
+ * Represents a viewable data structure
+ * element
+ *******************************************/
+
+import { Component } from '../index.js';
 
 class Data extends Component {
 

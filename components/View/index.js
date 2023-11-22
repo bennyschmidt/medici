@@ -1,10 +1,12 @@
+/*******************************************
+ * View
+ *
+ * Displays content from another source
+ *******************************************/
+
 import { randomUUID } from 'crypto';
 
 import { Rect } from '../index.js';
-
-/**
- * View
- */
 
 class View extends Rect {
 

@@ -1,10 +1,13 @@
+/*******************************************
+ * Link
+ *
+ * A text link with a hover state that
+ * navigates to a path
+ *******************************************/
+
 import { randomUUID } from 'crypto';
 
 import { Rect, Text } from '../index.js';
-
-/**
- * Link
- */
 
 class Link extends Rect {
 

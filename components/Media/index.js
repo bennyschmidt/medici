@@ -1,15 +1,16 @@
+/*******************************************
+ * Media
+ *
+ * Base media class with common methods
+ * and properties for viewable media
+ *******************************************/
+
 import fs from 'fs/promises';
 import notifier from 'node-notifier';
 
 import { Pressable } from '../index.js';
 
-const ERROR_MESSAGE = {
-  'HTTP/404': 'File not found.'
-};
-
-/**
- * Media
- */
+import { ERROR_MESSAGE } from '../../constants.js';
 
 class Media extends Pressable {
   static async load (filePath, onLoad) {

@@ -1,3 +1,10 @@
+/*******************************************
+ * Input
+ *
+ * A stateful text input with a
+ * placeholder and basic key validation
+ *******************************************/
+
 import { randomUUID } from 'crypto';
 
 import {
@@ -6,10 +13,6 @@ import {
 } from '../../constants.js';
 
 import { Rect, Text } from '../index.js';
-
-/**
- * Input
- */
 
 class Input extends Rect {
 
@@ -80,6 +83,11 @@ class Input extends Rect {
     return `<Input #${this.id}>`;
   }
 
+  /**
+   * onClick
+   * Handle click
+   **/
+
   onClick (event, component) {
     const { id } = component;
 
@@ -98,6 +106,11 @@ class Input extends Rect {
 
     this.state.focusTarget = component?.id;
   }
+
+  /**
+   * onKeyDown
+   * Handle keydown
+   **/
 
   onKeyDown (event, component) {
     let { key = '' } = event;

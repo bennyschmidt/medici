@@ -1,10 +1,12 @@
+/*******************************************
+ * App
+ *
+ * Extends Page with events & scripting
+ *******************************************/
+
 import { randomUUID } from 'crypto';
 
 import { Page } from '../index.js';
-
-/**
- * App
- */
 
 class App extends Page {
 

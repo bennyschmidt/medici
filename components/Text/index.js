@@ -1,10 +1,12 @@
+/*******************************************
+ * Text
+ *
+ * Represents a viewable text element
+ *******************************************/
+
 import { WINDOW_OPTIONS } from '../../constants.js';
 
 import { Component } from '../index.js';
-
-/**
- * Text
- */
 
 class Text extends Component {
 

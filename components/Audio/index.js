@@ -1,10 +1,13 @@
+/*******************************************
+ * Audio
+ *
+ * An audio player
+ *******************************************/
+
+
 import { randomUUID } from 'crypto';
 
 import { Playable } from '../index.js';
-
-/**
- * Audio
- */
 
 class Audio extends Playable {
 
