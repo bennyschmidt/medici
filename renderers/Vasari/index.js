@@ -30,7 +30,8 @@ import {
   DEBOUNCE_INTERVAL,
   WINDOW_OPTIONS,
   DEFAULT_FONT,
-  DEFAULT_FONT_SIZE
+  DEFAULT_FONT_SIZE,
+  DEFAULT_PATH
 } from '../../constants.js';
 
 class Vasari extends App {
@@ -63,6 +64,7 @@ class Vasari extends App {
       canvas: null,
       elements: {},
       components: {},
+      baseUrl: DEFAULT_PATH,
       search: ''
     };
 
@@ -359,8 +361,11 @@ class Vasari extends App {
     switch (tagName) {
       case 'RECT':
       case 'IMAGE':
+      case 'INPUT':
         const isEventTarget = (
-          attributes.hover || attributes.click
+          attributes.hover ||
+          attributes.click ||
+          attributes.keydown
         );
 
         if (isEventTarget) {
@@ -397,6 +402,7 @@ class Vasari extends App {
                 height,
                 onHover: null,
                 onClick: null,
+                onKeyDown: null,
                 component: this.state.components[id],
                 element: this.state.elements[id]
               };
@@ -427,6 +433,7 @@ class Vasari extends App {
                 height,
                 onHover: null,
                 onClick: null,
+                onKeyDown: null,
                 component: this.state.components[id],
                 element: this.state.elements[id]
               };
@@ -444,6 +451,37 @@ class Vasari extends App {
 
                 this.events[attributes.click](syntheticEvent);
                 this.state.components[id].onClick.call(this, syntheticEvent, this.state.components[id]);
+              }
+            };
+          }
+
+          if (attributes.keydown) {
+            if (!this.listeners[id]) {
+              this.listeners[id] = {
+                left,
+                top,
+                width,
+                height,
+                onHover: null,
+                onClick: null,
+                onKeyDown: null,
+                component: this.state.components[id],
+                element: this.state.elements[id]
+              };
+            }
+
+            this.listeners[id] = {
+              ...this.listeners[id],
+
+              onKeyDown: nativeEvent => {
+                const syntheticEvent = {
+                  ...nativeEvent,
+
+                  ...event
+                };
+
+                this.events[attributes.keydown](syntheticEvent);
+                this.state.components[id].onKeyDown.call(this, syntheticEvent, this.state.components[id]);
               }
             };
           }
@@ -719,6 +757,7 @@ class Vasari extends App {
               top,
               width,
               height,
+              onHover: null,
               onClick: null,
               onKeyDown: null,
               component: this.state.components[id],
@@ -753,7 +792,7 @@ class Vasari extends App {
                 },
                 component
               )
-            ),
+            )
           };
         }
 
@@ -838,6 +877,7 @@ class Vasari extends App {
             height,
             onHover: null,
             onClick: null,
+            onKeyDown: null,
             component: this.state.components[id],
             element: this.state.elements[id]
           };
@@ -870,7 +910,7 @@ class Vasari extends App {
               },
               component
             )
-          ),
+          )
         };
 
         break;
@@ -1066,9 +1106,11 @@ class Vasari extends App {
     let listenerElement;
 
     for (const listener of Object.keys(this.listeners)) {
-      listenerElement = this.listeners[listener];
+      const element = this.listeners[listener];
 
-      if (!listenerElement?.onClick) continue;
+      if (!element?.onClick) continue;
+
+      listenerElement = element;
 
       const {
         left,
@@ -1099,10 +1141,12 @@ class Vasari extends App {
 
     let listenerElement;
 
-    for (const listener of Object.keys(this.listeners)) {
-      listenerElement = this.listeners[listener];
+    for (let listener of Object.keys(this.listeners)) {
+      const element = this.listeners[listener];
 
-      if (!listenerElement?.onKeyDown) continue;
+      if (!element?.onKeyDown) continue;
+
+      listenerElement = element;
     }
 
     if (!listenerElement?.onKeyDown) return;

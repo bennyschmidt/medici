@@ -1,7 +1,7 @@
 import Vasari from './Vasari/index.js';
-import Medici from './Medici/index.js';
+import Vespucci from './Vespucci/index.js';
 
 export {
-  Medici,
+  Vespucci,
   Vasari
 }

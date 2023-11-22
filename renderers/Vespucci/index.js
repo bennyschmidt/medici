@@ -1,5 +1,5 @@
 /*******************************************
- * Medici
+ * Vespucci
  * A JSX-native peer-to-peer browser
  *
  * Extends Vasari with a navigator
@@ -18,7 +18,7 @@ import {
 
 import { Vasari } from '../index.js';
 
-class Medici extends Vasari {
+class Vespucci extends Vasari {
 
   /*******************************************
    * Init
@@ -26,8 +26,8 @@ class Medici extends Vasari {
 
   constructor () {
     super(
-      `${__dirname}/renderers/Medici/browser.jsx`,
-      'Medici'
+      `${__dirname}/renderers/Vespucci/browser.jsx`,
+      'Vespucci'
     );
 
     this.state.history = [];
@@ -46,6 +46,8 @@ class Medici extends Vasari {
    **/
 
   onBack = () => {
+    if (!this.state?.history?.length) return;
+
     // current
 
     this.state.history.pop();
@@ -234,4 +236,4 @@ class Medici extends Vasari {
   };
 }
 
-export default Medici;
+export default Vespucci;

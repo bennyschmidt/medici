@@ -1,6 +1,6 @@
-import { Medici } from './renderers/index.js';
+import { Vespucci } from './renderers/index.js';
 
-const browser = new Medici();
+const browser = new Vespucci();
 
 setTimeout(() => (
   browser.onNavigate('@exactchange:page:featured')
