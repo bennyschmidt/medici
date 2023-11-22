@@ -154,8 +154,28 @@ class Vasari extends App {
    **/
 
   parseJSX = () => {
+    const variables = this.value.match(/\$\{(.*?)\}/g);
+
+    let outerJSX = this.value.slice();
+
+    if (variables?.length) {
+      for (const result of variables) {
+        const parsedVariable = (
+          result.slice(result.indexOf('{') + 1, result.indexOf('}'))
+        );
+
+        const stateValue = this.docState.get(parsedVariable);
+
+        if (stateValue || parsedVariable in this.docState) {
+          outerJSX = (
+            this.value.replace(result, stateValue)
+          );
+        }
+      }
+    }
+
     const html = HTMLParser.parse(
-      this.value.replace(/\n/g, '').trim()
+      outerJSX.replace(/\n/g, '').trim()
     );
 
     const { firstChild: rootElement } = html;
