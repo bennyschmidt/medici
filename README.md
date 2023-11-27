@@ -74,18 +74,6 @@ These directories correspond to native content types in Medici:
 ```jsx
 <>
   <Declare boxId="redBox" boxColor="red" />
-  <Declare>
-    const box = this.getElementById(state.boxId);
-
-    console.log('render', state.boxId);
-
-    if (box?.attributes) {
-      this.updateElementById(this.state.boxId, {
-        x: box.attributes.x + 10,
-        y: box.attributes.y
-      });
-    }
-  </Declare>
   <Event id="handleHover">
     console.log('hovering over the box');
   </Event>
