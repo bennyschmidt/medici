@@ -80,6 +80,9 @@ These directories correspond to native content types in Medici:
   <Event id="handleClick">
     console.log('box click');
   </Event>
+  <Event id="onExit">
+    process.exit();
+  </Event>
   <Text id="heading" fill style="white" text="Click the box!" x={15} y={20} />
   <Rect id="redBox" fill style="${boxColor}" x={0} y={30} width={100} height={100} hover={handleHover} click={handleClick} />
 </>
