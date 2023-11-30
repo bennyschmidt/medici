@@ -1027,6 +1027,14 @@ class Vasari extends App {
           this.state.width,
           this.state.height
         );
+
+        this.state.canvas.context.font = DEFAULT_FONT;
+        this.state.canvas.context.fillStyle = null;
+        this.state.canvas.context.strokeStyle = null;
+        this.state.canvas.context.shadowColor = null;
+        this.state.canvas.context.shadowBlur = null;
+        this.state.canvas.context.lineJoin = null;
+        this.state.canvas.context.lineWidth = null;
       }
 
       this.state.elements.root = this.parseJSX();

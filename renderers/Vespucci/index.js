@@ -159,7 +159,7 @@ class Vespucci extends Vasari {
         this.value = docSnapshot.replace(
           '<%ROOT%>', `
           <View id="root" x={0} y={0} width={1024} height={544}>
-            <Data style="white" list="${list}" x={10} y={60} maxWidth={1024} />
+            <Data fill style="white" list="${list}" x={10} y={60} maxWidth={1024} />
           </View>
         `);
 
