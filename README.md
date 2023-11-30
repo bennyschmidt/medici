@@ -63,11 +63,12 @@ These directories correspond to native content types in Medici:
 
 ##### JSX-to-Canvas Renderer
 
-- [Vasari](https://github.com/bennyschmidt/medici/blob/master/renderers/Vasari/index.js): Built using [`node-sdl`](https://github.com/kmamal/node-sdl)
+- [Vasari](https://github.com/bennyschmidt/medici/blob/master/renderers/Vasari/index.js): Based on [`node-sdl`](https://github.com/kmamal/node-sdl)
 - Cross-platform: SDL is based on C and is naturally cross-platform.
 - No relation to conventional browsers: Not based on Chromium or Blink, WebKit, or any mainstream rendering engine.
 - JSX is native code in Medici and transpiles to `Canvas` (not HTML/CSS rendering). 
 - Supports native 2D and 3D drawing via `Canvas`, `WebGL`, and/or `WebGPU`.
+- Uses the Node.js JavaScript runtime 
 
 ##### Stateful JSX (native!) example
 
