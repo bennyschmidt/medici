@@ -10,7 +10,9 @@
  * states
  *******************************************/
 
+import { exec } from 'child_process';
 import { randomUUID } from 'crypto';
+
 import sdl from '@kmamal/sdl';
 import HTMLParser from 'node-html-parser';
 import Canvas from 'canvas';
@@ -67,7 +69,7 @@ class Vasari extends App {
       elements: {},
       components: {},
       baseUrl: DEFAULT_PATH,
-      search: ''
+      input: {}
     };
 
     this.window = window;
@@ -687,7 +689,7 @@ class Vasari extends App {
         break;
 
       case 'INPUT':
-        if (!component || component.value !== this.state.search) {
+        if (!component || component.value !== this.state.input[component.id]) {
           const placeholder = (
             component?.placeholder || 'Search apps & content...'
           );
@@ -712,7 +714,7 @@ class Vasari extends App {
           component = this.state.components[id] = input;
 
           if (component?.value) {
-            this.state.search = component.value;
+            this.state.input[component.id] = component.value;
           }
 
           const inputRectGradient = this.state.canvas.context.createLinearGradient(
@@ -762,7 +764,7 @@ class Vasari extends App {
           attributes.width = textComponent.attributes.width;
           attributes.height = textComponent.attributes.height;
 
-          if (this.state.search) {
+          if (this.state.input[component.id]) {
             this.state.canvas.context.fillStyle = textComponent.attributes.style;
 
             this.state.canvas.context.font = (
@@ -779,7 +781,7 @@ class Vasari extends App {
           this.state.canvas.context.textRendering = 'optimizeLegibility';
 
           this.state.canvas.context.fillText(
-            this.state.search || placeholder,
+            this.state.input[component.id] || placeholder,
             textComponent.attributes.x,
             textComponent.attributes.y,
             textComponent.attributes.width
@@ -991,7 +993,11 @@ class Vasari extends App {
         if (element.childNodes?.length) {
           const [{ _rawText } = {}] = element.childNodes;
 
-          const state = this.docState;
+          const state = {
+            ...this.docState,
+
+            exec
+          };
 
           eval(`(() => { ${_rawText} })()`);
         }
@@ -1002,7 +1008,11 @@ class Vasari extends App {
         this.events[id] = event => {
           const [{ _rawText } = {}] = element.childNodes;
 
-          const state = this.docState;
+          const state = {
+            ...this.docState,
+
+            exec
+          };
 
           eval(`(() => { ${_rawText} })()`);
         };

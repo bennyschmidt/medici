@@ -232,7 +232,7 @@ class Vespucci extends Vasari {
         break;
     }
 
-    this.state.search = path;
+    this.state.input.search = path;
     this.events = {};
     this.listeners = {};
 

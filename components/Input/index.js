@@ -123,8 +123,8 @@ class Input extends Rect {
 
     switch (key) {
       case 'return':
-        if (this.state.search && this.onNavigate) {
-          this.onNavigate(this.state.search);
+        if (this.state.input[component.id] && this.onNavigate) {
+          this.onNavigate(this.state.input[component.id]);
 
           return;
         }
@@ -140,21 +140,21 @@ class Input extends Rect {
         break;
 
       case 'space':
-        this.state.search += ' ';
+        this.state.input[component.id] += ' ';
 
         break;
 
       case 'tab':
-        this.state.search += '  ';
+        this.state.input[component.id] += '  ';
 
         break;
 
       case 'backspace':
         if (event.ctrl) {
-          this.state.search = '';
+          this.state.input[component.id] = '';
         } else {
-          this.state.search = (
-            this.state.search.substring(0, this.state.search.length - 1)
+          this.state.input[component.id] = (
+            this.state.input[component.id].substring(0, this.state.input[component.id].length - 1)
           );
         }
 
@@ -178,7 +178,7 @@ class Input extends Rect {
         }
 
         if (PRINTABLE_KEYS.includes(key.toLowerCase())) {
-          this.state.search += key;
+          this.state.input[component.id] += key;
         }
     }
 
@@ -190,7 +190,7 @@ class Input extends Rect {
       textComponent: {
         ...component.textComponent,
 
-        text: this.state.search,
+        text: this.state.input[component.id],
         style: 'white',
 
         attributes: {
