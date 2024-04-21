@@ -32,6 +32,7 @@ import {
 
 import {
   DEBOUNCE_INTERVAL,
+  DRAG_DROP_TIMEOUT,
   WINDOW_OPTIONS,
   DEFAULT_FONT,
   DEFAULT_FONT_SIZE,
@@ -201,7 +202,11 @@ class Vasari extends App {
    * Query a state element
    **/
 
-  getElementById = id => this.state.elements[id];
+  getElementById = id => {
+    console.log(this.state.elements[id]);
+
+    return this.state.elements[id];
+  };
 
   /**
    * updateElementById
@@ -209,33 +214,19 @@ class Vasari extends App {
    **/
 
   updateElementById = (id, update = {}) => {
-    const component = {
-      ...this.getComponentById(id)
-    };
+    const component = this.getComponentById(id);
+    const element = this.getElementById(id);
 
-    const element = {
-      ...this.getElementById(id)
-    };
+    if (!component?.attributes || !element?.attributes) return;
 
-    for (const key in update) {
-      if (key in component) {
-        component[key] = update[key];
-      }
+    for (const key of Object.keys(update)) {
+      const value = update[key];
 
-      if (key in component.attributes) {
-        component.attributes[key] = update[key];
-      }
-
-      if (key in element) {
-        element[key] = update[key];
-      }
-
-      if (key in element.attributes) {
-        element.attributes[key] = update[key];
-      }
+      component[key] = value;
+      component.attributes[key] = value;
+      element[key] = value;
+      element.attributes[key] = value;
     }
-
-    const jsxElement = element.toString();
 
     console.log(`<${element.rawTagName} ${element.rawAttrs}/>`);
 
@@ -1093,6 +1084,7 @@ class Vasari extends App {
 
     const onResize = this.onResize.bind(this);
     const onClick = this.onClick.bind(this);
+    const onMouseUp = this.onMouseUp.bind(this);
     const onHover = this.onHover.bind(this);
     const onKeyDown = this.onKeyDown.bind(this);
 
@@ -1102,11 +1094,16 @@ class Vasari extends App {
     this.window.off('mouseButtonDown', onClick);
     this.window.on('mouseButtonDown', onClick);
 
+    this.window.off('mouseButtonUp', onMouseUp);
+    this.window.on('mouseButtonUp', onMouseUp);
+
     this.window.off('mouseMove', onHover);
     this.window.on('mouseMove', onHover);
 
     this.window.off('keyDown', onKeyDown);
     this.window.on('keyDown', onKeyDown);
+
+    this.window.setAccelerated(true);
 
     this.state.canvas = Canvas.createCanvas(this.state.width, this.state.height);
 
@@ -1121,6 +1118,7 @@ class Vasari extends App {
   onUnload = () => {
     this.window.off('resize', this.onResize.bind(this));
     this.window.off('mouseButtonDown', this.onClick.bind(this));
+    this.window.off('mouseButtonUp', this.onMouseUp.bind(this));
     this.window.off('mouseMove', this.onHover.bind(this));
     this.window.off('keyDown', this.onKeyDown.bind(this));
   };
@@ -1133,6 +1131,17 @@ class Vasari extends App {
   onHover = event => {
     if (this._nextEvent > Date.now()) return;
 
+    sdl.mouse.setCursor('arrow');
+
+    const isDragging = Boolean(this.state.dragStart);
+    const clickDuration = Date.now() - this.state.dragStart;
+
+    if (isDragging && (clickDuration > DRAG_DROP_TIMEOUT)) {
+      sdl.mouse.setCursor('crosshair');
+
+      return;
+    }
+
     this.state.hoverTarget = null;
 
     const { x, y } = event;
@@ -1144,8 +1153,6 @@ class Vasari extends App {
 
     for (const listener of Object.keys(this.listeners)) {
       listenerElement = this.listeners[listener];
-
-      if (!listenerElement?.onHover) continue;
 
       const {
         left,
@@ -1178,7 +1185,11 @@ class Vasari extends App {
    **/
 
   onClick = event => {
-    if (this._nextEvent > Date.now()) return;
+    const now = Date.now();
+
+    this.state.dragStart = now;
+
+    if (this._nextEvent > now) return;
 
     const { x, y } = event;
 
@@ -1217,6 +1228,15 @@ class Vasari extends App {
 
     this._nextEvent = Date.now() + +DEBOUNCE_INTERVAL;
     this.render();
+  };
+
+  /**
+   * onMouseUp
+   * Global mouseup router
+   **/
+
+  onMouseUp = event => {
+    this.state.dragStart = null;
   };
 
   /**

@@ -1,3 +1,4 @@
 {
-  "@exactchange": "https://exactchange.network/darkwave"
+  "@exactchange": "http://localhost:1337/.darkwave",
+  "@fog": "http://localhost:1337/fog/browser"
 }

@@ -7,6 +7,8 @@
 
 import { randomUUID } from 'crypto';
 
+import sdl from '@kmamal/sdl';
+
 import { Rect, Text } from '../index.js';
 
 class Link extends Rect {
@@ -80,6 +82,8 @@ class Link extends Rect {
 
   onHover (_, component) {
     this.state.hoverTarget = component?.id;
+
+    sdl.mouse.setCursor('hand');
   }
 
   onClick (event) {
