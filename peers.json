@@ -1,3 +1,4 @@
 {
-  "@exactchange": "https://exactchange.network/darkwave"
+  "@exactchange": "https://exactchange.network/darkwave",
+  "@fog": "https://exactchange.network/fog/browser"
 }

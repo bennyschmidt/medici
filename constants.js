@@ -1,11 +1,12 @@
 const FPS = 30;
 const DEBOUNCE_INTERVAL = 30;
+const DRAG_DROP_TIMEOUT = 300;
 
 const WINDOW_OPTIONS = {
   title: 'Medici',
   width: 1024,
   height: 576,
-  borderless: true
+  borderless: false
 };
 
 const DEFAULT_FONT_SIZE = 13;
@@ -125,6 +126,7 @@ const SHIFT_KEYS = {
 export {
   FPS,
   DEBOUNCE_INTERVAL,
+  DRAG_DROP_TIMEOUT,
   WINDOW_OPTIONS,
   DEFAULT_FONT,
   DEFAULT_FONT_SIZE,

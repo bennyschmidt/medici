@@ -7,6 +7,8 @@
 
 import { randomUUID } from 'crypto';
 
+import sdl from '@kmamal/sdl';
+
 import {
   PRINTABLE_KEYS,
   SHIFT_KEYS
@@ -81,6 +83,15 @@ class Input extends Rect {
 
   toString () {
     return `<Input #${this.id}>`;
+  }
+
+  /**
+   * onHover
+   * Handle hover
+   **/
+
+  onHover () {
+    sdl.mouse.setCursor('ibeam');
   }
 
   /**
