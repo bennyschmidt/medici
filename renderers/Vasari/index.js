@@ -202,11 +202,7 @@ class Vasari extends App {
    * Query a state element
    **/
 
-  getElementById = id => {
-    console.log(this.state.elements[id]);
-
-    return this.state.elements[id];
-  };
+  getElementById = id => this.state.elements[id];
 
   /**
    * updateElementById
