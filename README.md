@@ -25,7 +25,7 @@ Navigate to files in the peer network:
 
 ##### Peer-to-peer
 
-Claim your `@alias` by adding it to [`peers.json`](https://github.com/bennyschmidt/medici/blob/master/peers.json) via a [Pull Request](https://github.com/bennyschmidt/medici/pulls). When approved, your content will be public in the network.
+Define an `@alias` for each peer by adding them to [`peers.json`](https://github.com/bennyschmidt/medici/blob/master/peers.json) (or, a peer can request being added via a [Pull Request](https://github.com/bennyschmidt/medici/pulls)).
 
 An entry in `peers.json` is as simple as:
 
@@ -87,3 +87,8 @@ These directories correspond to native content types in Medici:
   <Rect id="redBox" fill style="${boxColor}" x={0} y={30} width={100} height={100} hover={handleHover} click={handleClick} />
 </>
 ```
+### Apps based on Medici
+
+![Fog - Diablo 4](https://github.com/bennyschmidt/medici/assets/45407493/3e4f7fcd-c8bf-4c1f-b48f-7cbd557f4f74)
+
+Fog Browser 
